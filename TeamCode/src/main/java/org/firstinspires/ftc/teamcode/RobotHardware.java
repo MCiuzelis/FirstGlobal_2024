@@ -1,18 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 
+import androidx.annotation.GuardedBy;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.outoftheboxrobotics.photoncore.hardware.PhotonLynxVoltageSensor;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.roboctopi.cuttlefish.utils.Direction;
+import com.roboctopi.cuttlefishftcbridge.devices.CuttleMotor;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleRevHub;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.utils.wrappers.BetterEncoder;
-import org.firstinspires.ftc.teamcode.utils.wrappers.BetterMotor;
-import org.firstinspires.ftc.teamcode.utils.wrappers.BetterServo;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+import java.util.List;
+
 
 @Config
 public class RobotHardware {
@@ -20,68 +29,105 @@ public class RobotHardware {
     HardwareMap hw;
 
     public CuttleRevHub controlHub;
-    public CuttleRevHub expansionHub;
-    public BetterMotor frontLeft, frontRight, backLeft, backRight, liftMotor_Left, liftMotor_Right, intake_AngleMotor, intake_spinyMotor;
-    public BetterEncoder encoder_liftPosition, encoder_intake_Angle, encoder_intake_Speed;
-    public BetterServo releaseServoLeft, releaseServoRight, topServoLeft, topServoRight;
-    public RevColorSensorV3 colorSensor;
+    public CuttleMotor frontLeft, frontRight, backLeft, backRight;
+
+    List<LynxModule> allHubs;
+
+    private final Object imuLock = new Object();
+
+    @GuardedBy("imuLock")
+    private IMU imu;
+
+    //private RevIMU imu;
+
+    public Rotation2d imuAngle = new Rotation2d();
+    private Thread imuThread;
+
 
     public RobotHardware(HardwareMap hw){
         this.hw = hw;
     }
 
 
+
+
     public void initialiseHardware(Telemetry telemetry) {
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        controlHub = new CuttleRevHub(hw, CuttleRevHub.HubTypes.CONTROL_HUB);
-        controlHub.setI2CBusSpeed(CuttleRevHub.I2CSpeed.HIGH_SPEED);
+        allHubs = hw.getAll(LynxModule.class);
 
-        expansionHub = new CuttleRevHub(hw, "Expansion Hub 2");
+        controlHub = new CuttleRevHub(hw, CuttleRevHub.HubTypes.CONTROL_HUB);
 
         frontLeft = initMotor(controlHub, 2, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft = initMotor(controlHub, 3, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight = initMotor(controlHub, 1, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight = initMotor(controlHub, 0, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft = initMotor(controlHub, 1, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight = initMotor(controlHub, 0, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight = initMotor(controlHub, 3, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
 
-        liftMotor_Left = initMotor(expansionHub, 0, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotor_Right = initMotor(expansionHub, 1, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
-        intake_AngleMotor = initMotor(expansionHub, 3, Direction.REVERSE, DcMotor.ZeroPowerBehavior.FLOAT);
-        intake_spinyMotor = initMotor(expansionHub, 2, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
+        synchronized (imuLock) {
+            //imu = new RevIMU(hw, "imu");
 
-        encoder_liftPosition = new BetterEncoder(controlHub, 3, 530.05128205128);
-        encoder_liftPosition.setDirection(Direction.REVERSE);
-        encoder_intake_Angle = new BetterEncoder(controlHub, 0, 288d * 40 / 15);
-        encoder_intake_Angle.setDirection(Direction.REVERSE);
-
-        releaseServoLeft = new BetterServo(controlHub, 1, BetterServo.Direction.FORWARD);
-        releaseServoRight = new BetterServo(controlHub, 0, BetterServo.Direction.REVERSE);
-
-        topServoLeft = new BetterServo(controlHub, 2, BetterServo.Direction.FORWARD);
-        topServoRight = new BetterServo(controlHub, 3, BetterServo.Direction.REVERSE);
-
-        colorSensor = hw.get(RevColorSensorV3.class, "colorSensor");
+            imu = hw.get(IMU.class, "imu");
+            RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+            RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+            RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+            imu.initialize(new IMU.Parameters(orientationOnRobot));
+            imu.resetYaw();
+            //imu.init();
+            //imu.reset();
+        }
     }
 
     public void setLeftPower(double power){
-        frontLeft.setPower(power);
-        backLeft.setPower(power);
+        frontLeft.setPower(power * 1.1);
+        backLeft.setPower(power * 1.1);
     }
 
     public void setRightPower(double power){
-        frontRight.setPower(power);
+        frontRight.setPower(power);    //TODO FIX LATER
         backRight.setPower(power);
     }
 
-    public void setLiftPower(double power){
-        liftMotor_Left.setPower(power);
-        liftMotor_Right.setPower(power);
+
+
+
+
+    public void setBulkCachingMode(LynxModule.BulkCachingMode mode){
+        for (LynxModule module : allHubs) {
+            module.setBulkCachingMode(mode);
+        }
     }
 
-    private BetterMotor initMotor(CuttleRevHub hub, int motorPort, Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
-        BetterMotor motor = new BetterMotor(hub, motorPort);
+    public void clearBulkCache(){
+        for (LynxModule module : allHubs) {
+            module.clearBulkCache();
+        }
+    }
+
+    private CuttleMotor initMotor(CuttleRevHub hub, int motorPort, Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
+        CuttleMotor motor = new CuttleMotor(hub, motorPort);
         motor.setDirection(direction);
         motor.setZeroPowerBehaviour(zeroPowerBehavior);
         return motor;
+    }
+
+    private Servo initServo (HardwareMap hw, String servoPort, Servo.Direction direction){
+        Servo servo = hw.get(Servo.class, servoPort);
+        servo.setDirection(direction);
+        return servo;
+    }
+
+    public void startIMUThread(LinearOpMode opMode){
+        imuThread = new Thread(() -> {
+            while (!opMode.isStopRequested() && opMode.opModeIsActive()) {
+                synchronized (imuLock) {
+                    imuAngle = new Rotation2d(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+                }
+            }
+        });
+        imuThread.start();
+    }
+
+    public void updateIMUStupidMonkeyMethod(){
+        imuAngle = new Rotation2d(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
     }
 }

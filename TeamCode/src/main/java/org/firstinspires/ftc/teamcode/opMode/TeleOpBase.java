@@ -1,25 +1,14 @@
 package org.firstinspires.ftc.teamcode.opMode;
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.outoftheboxrobotics.photoncore.Photon;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
-import org.firstinspires.ftc.teamcode.utils.wrappers.BetterGamepad;
+import org.firstinspires.ftc.teamcode.utils.BetterGamepad;
 
-@Photon
 public abstract class TeleOpBase extends CommandOpMode {
-    public BetterGamepad driver;
-    public BetterGamepad assistant;
-
     public RobotHardware robot;
+    public BetterGamepad driver;
     public DriveTrainSubsystem tank;
-    public IntakeSubsystem intake;
-    public LiftSubsystem lift;
-
     private boolean start = false;
     private double loopTime = 0;
 
@@ -29,13 +18,8 @@ public abstract class TeleOpBase extends CommandOpMode {
         robot.initialiseHardware(telemetry);
 
         tank = new DriveTrainSubsystem(robot, telemetry);
-        intake = new IntakeSubsystem(robot, telemetry);
-        lift = new LiftSubsystem(robot, telemetry);
-
         driver = new BetterGamepad(gamepad1);
-        assistant = new BetterGamepad(gamepad2);
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Init();
         while (opModeInInit()) InitLoop();
     }
@@ -60,8 +44,8 @@ public abstract class TeleOpBase extends CommandOpMode {
     }
 
     public abstract void Init();
-    public void InitLoop(){}
-    public void Start(){}
+    public void InitLoop(){};
+    public void Start(){};
     public abstract void Loop();
-    public void Stop(){}
+    public void Stop(){};
 }
