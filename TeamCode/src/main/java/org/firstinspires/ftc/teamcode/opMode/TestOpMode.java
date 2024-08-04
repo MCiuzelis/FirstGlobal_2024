@@ -3,8 +3,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.utils.DistanceSensor;
-
 @Config
 @Photon
 @TeleOp(name = "tankTest")
