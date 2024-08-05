@@ -35,5 +35,6 @@ public class TestOpMode extends TeleOpBase {
             robot.liftMotor_Left.setPower(0);
             robot.liftMotor_Right.setPower(0);
         }
+        //test
     }
 }
