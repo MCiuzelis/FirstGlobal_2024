@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static com.arcrobotics.ftclib.util.MathUtils.clamp;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -32,24 +34,29 @@ public class LiftSubsystem extends SubsystemBase {
     public void periodic() {
         controller.setPID(p, i, d);
 
-        double currentPosition = robot.liftPosition.getRotation();
+        double currentPosition = robot.encoder_liftPosition.getRotation();
         double power = controller.calculate(currentPosition, targetPosition);
         robot.setLiftPower(power);
     }
 
     public void setTargetPosition(TARGET_POSITION position){
         switch (position) {
-            case BOTTOM:
+            case DOWN:
                 targetPosition = lowPosition;
                 break;
-            case TOP:
+            case UP:
                 targetPosition = highPosition;
                 break;
         }
     }
 
+    public void offsetTarget(double offset){
+        targetPosition += offset;
+        targetPosition = clamp(targetPosition, lowPosition, highPosition);
+    }
+
     public enum TARGET_POSITION{
-        BOTTOM,
-        TOP
+        DOWN,
+        UP
     }
 }
