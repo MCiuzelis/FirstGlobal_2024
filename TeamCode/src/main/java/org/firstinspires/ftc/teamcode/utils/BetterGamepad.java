@@ -6,12 +6,17 @@ import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class BetterGamepad extends GamepadEx {
-    public static final GamepadKeys.Button circle = GamepadKeys.Button.B;
-    public static final GamepadKeys.Button cross = GamepadKeys.Button.A;
-    public static final GamepadKeys.Button triangle = GamepadKeys.Button.Y;
-    public static final GamepadKeys.Button square = GamepadKeys.Button.X;
-    public static final GamepadKeys.Button share = GamepadKeys.Button.BACK;
-    public static final GamepadKeys.Button options = GamepadKeys.Button.START;
+    public GamepadKeys.Button circle = GamepadKeys.Button.B;
+    public GamepadKeys.Button cross = GamepadKeys.Button.A;
+    public GamepadKeys.Button triangle = GamepadKeys.Button.Y;
+    public GamepadKeys.Button square = GamepadKeys.Button.X;
+    public GamepadKeys.Button share = GamepadKeys.Button.BACK;
+    public GamepadKeys.Button options = GamepadKeys.Button.START;
+    public GamepadKeys.Button dpadUp = GamepadKeys.Button.DPAD_UP;
+    public GamepadKeys.Button dpadDown = GamepadKeys.Button.DPAD_DOWN;
+    public GamepadKeys.Button dpadLeft = GamepadKeys.Button.DPAD_LEFT;
+    public GamepadKeys.Button dpadRight = GamepadKeys.Button.DPAD_RIGHT;
+
 
     private Gamepad gamepad;
 
