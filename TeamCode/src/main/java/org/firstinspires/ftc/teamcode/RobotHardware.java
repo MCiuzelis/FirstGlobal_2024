@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -25,7 +24,7 @@ public class RobotHardware {
     public CuttleRevHub controlHub;
     public CuttleRevHub expansionHub;
     public CuttleMotor frontLeft, frontRight, backLeft, backRight, liftMotor_Left, liftMotor_Right, intake_AngleMotor, intake_spinyMotor;
-    public CuttleEncoder liftPosition, intake_Angle, intakeSpeed;
+    public CuttleEncoder encoder_liftPosition, encoder_intake_Angle, encoder_driveBaseLeft, encoder_driveBaseRight;
     List<LynxModule> allHubs;
 
     public RobotHardware(HardwareMap hw){
@@ -50,9 +49,10 @@ public class RobotHardware {
         intake_AngleMotor = initMotor(expansionHub, 2, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
         intake_spinyMotor = initMotor(expansionHub, 3, Direction.FORWARD, DcMotor.ZeroPowerBehavior.FLOAT);
 
-        intake_Angle = new CuttleEncoder(controlHub, 0, 288);
-        liftPosition = new CuttleEncoder(controlHub, 1, 530.05128205128);
-        intakeSpeed = new CuttleEncoder(controlHub, 2, 288);
+        encoder_liftPosition = new CuttleEncoder(controlHub, 1, 530.05128205128);
+        encoder_intake_Angle = new CuttleEncoder(controlHub, 2, 288d * 15 / 40);
+        encoder_driveBaseLeft = new CuttleEncoder(controlHub, 3, 0);
+        encoder_driveBaseRight = new CuttleEncoder(controlHub, 0, 0);
     }
 
     public void setLeftPower(double power){

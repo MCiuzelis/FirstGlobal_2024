@@ -3,12 +3,16 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.utils.BetterGamepad;
 
 public abstract class TeleOpBase extends CommandOpMode {
     public RobotHardware robot;
     public BetterGamepad driver;
     public DriveTrainSubsystem tank;
+    public IntakeSubsystem intake;
+    public LiftSubsystem lift;
     private boolean start = false;
     private double loopTime = 0;
 
@@ -18,6 +22,8 @@ public abstract class TeleOpBase extends CommandOpMode {
         robot.initialiseHardware(telemetry);
 
         tank = new DriveTrainSubsystem(robot, telemetry);
+        intake = new IntakeSubsystem(robot, telemetry);
+        lift = new LiftSubsystem(robot, telemetry);
         driver = new BetterGamepad(gamepad1);
 
         Init();
