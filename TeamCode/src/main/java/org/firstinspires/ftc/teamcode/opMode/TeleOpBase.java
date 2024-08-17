@@ -8,11 +8,14 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.utils.BetterGamepad;
 
 public abstract class TeleOpBase extends CommandOpMode {
-    public RobotHardware robot;
     public BetterGamepad driver;
+    public BetterGamepad assistant;
+
+    public RobotHardware robot;
     public DriveTrainSubsystem tank;
     public IntakeSubsystem intake;
     public LiftSubsystem lift;
+
     private boolean start = false;
     private double loopTime = 0;
 
@@ -24,7 +27,9 @@ public abstract class TeleOpBase extends CommandOpMode {
         tank = new DriveTrainSubsystem(robot, telemetry);
         intake = new IntakeSubsystem(robot, telemetry);
         lift = new LiftSubsystem(robot, telemetry);
+
         driver = new BetterGamepad(gamepad1);
+        assistant = new BetterGamepad(gamepad2);
 
         Init();
         while (opModeInInit()) InitLoop();

@@ -37,22 +37,23 @@ public class RobotHardware {
 
         allHubs = hw.getAll(LynxModule.class);
         controlHub = new CuttleRevHub(hw, CuttleRevHub.HubTypes.CONTROL_HUB);
-        expansionHub = new CuttleRevHub(hw, CuttleRevHub.HubTypes.EXPANSION_HUB);
+        expansionHub = new CuttleRevHub(hw, "Expansion Hub 2");
 
         frontLeft = initMotor(controlHub, 2, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft = initMotor(controlHub, 1, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight = initMotor(controlHub, 0, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight = initMotor(controlHub, 3, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft = initMotor(controlHub, 3, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight = initMotor(controlHub, 1, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight = initMotor(controlHub, 0, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
 
-        liftMotor_Left = initMotor(expansionHub, 0, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotor_Right = initMotor(expansionHub, 1, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
-        intake_AngleMotor = initMotor(expansionHub, 2, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
-        intake_spinyMotor = initMotor(expansionHub, 3, Direction.FORWARD, DcMotor.ZeroPowerBehavior.FLOAT);
+        liftMotor_Left = initMotor(expansionHub, 0, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor_Right = initMotor(expansionHub, 1, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
+        intake_AngleMotor = initMotor(expansionHub, 3, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
+        intake_spinyMotor = initMotor(expansionHub, 2, Direction.REVERSE, DcMotor.ZeroPowerBehavior.FLOAT);
 
-        encoder_liftPosition = new CuttleEncoder(controlHub, 1, 530.05128205128);
-        encoder_intake_Angle = new CuttleEncoder(controlHub, 2, 288d * 15 / 40);
-        encoder_driveBaseLeft = new CuttleEncoder(controlHub, 3, 0);
-        encoder_driveBaseRight = new CuttleEncoder(controlHub, 0, 0);
+        encoder_liftPosition = new CuttleEncoder(controlHub, 3, 530.05128205128);
+        encoder_intake_Angle = new CuttleEncoder(controlHub, 0, 288d * 40 / 15);
+        encoder_intake_Angle.setDirection(Direction.REVERSE);
+        encoder_driveBaseLeft = new CuttleEncoder(controlHub, 1, 28d * 84 / 29 * 76 / 21);
+        encoder_driveBaseRight = new CuttleEncoder(controlHub, 2, 28d * 84 / 29 * 76 / 21);
     }
 
     public void setLeftPower(double power){
