@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 
@@ -27,7 +29,7 @@ public class LiftSubsystem extends SubsystemBase {
 
     public LiftSubsystem(RobotHardware robot, Telemetry telemetry){
         this.robot = robot;
-        this.telemetry = telemetry;
+        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
 

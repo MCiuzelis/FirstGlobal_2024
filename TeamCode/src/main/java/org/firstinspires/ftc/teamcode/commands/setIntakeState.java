@@ -15,9 +15,9 @@ public class setIntakeState extends SequentialCommandGroup {
         addCommands(
                 new ConditionalCommand(
                         new ParallelCommandGroup(
-                                new setIntakeSpeedCommand(intake, IntakeSubsystem.nominalSpeed),
-                                new WaitCommand(200),
-                                new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP)
+                                new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
+                                new WaitCommand(50),
+                                new setIntakeSpeedCommand(intake, IntakeSubsystem.nominalSpeed)
                         ),
                         new ParallelCommandGroup(
                                 new setIntakeSpeedCommand(intake, 0),

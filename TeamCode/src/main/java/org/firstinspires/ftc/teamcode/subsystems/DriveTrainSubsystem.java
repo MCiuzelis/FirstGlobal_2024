@@ -17,8 +17,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     Telemetry telemetry;
 
     public static double turnOutputCap = 0.5;
-    LowPassFilter leftFilter = new LowPassFilter(0.9);
-    LowPassFilter rightFilter = new LowPassFilter(0.9);
+    LowPassFilter leftFilter = new LowPassFilter(0.75);
+    LowPassFilter rightFilter = new LowPassFilter(0.75);
 
     public DriveTrainSubsystem(RobotHardware robot, Telemetry telemetry){
         this.robot = robot;
