@@ -16,7 +16,8 @@ public class BetterGamepad extends GamepadEx {
     public GamepadKeys.Button dpadDown = GamepadKeys.Button.DPAD_DOWN;
     public GamepadKeys.Button dpadLeft = GamepadKeys.Button.DPAD_LEFT;
     public GamepadKeys.Button dpadRight = GamepadKeys.Button.DPAD_RIGHT;
-
+    public GamepadKeys.Button leftBumper = GamepadKeys.Button.LEFT_BUMPER;
+    public GamepadKeys.Button rightBumper = GamepadKeys.Button.RIGHT_BUMPER;
 
     private Gamepad gamepad;
 
@@ -53,15 +54,6 @@ public class BetterGamepad extends GamepadEx {
         drive = drive.scale(drive.magnitude());
 
         double turn = -gamepad.right_stick_x;
-
-        if (gamepad.right_trigger > 0.1) {
-            drive = drive.scale(0.1);
-            turn *= 0.35;
-        }
-        else if (gamepad.left_stick_x < 0.1) {
-            drive = drive.scale(0.8);
-            turn *= 0.8;
-        }
 
         drive = drive.scale(driveScalar);
         turn *= turnScalar;
