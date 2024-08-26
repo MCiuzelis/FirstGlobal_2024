@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opMode;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.outoftheboxrobotics.photoncore.Photon;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
@@ -7,6 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.utils.BetterGamepad;
 
+@Photon
 public abstract class TeleOpBase extends CommandOpMode {
     public BetterGamepad driver;
     public BetterGamepad assistant;
@@ -31,6 +35,7 @@ public abstract class TeleOpBase extends CommandOpMode {
         driver = new BetterGamepad(gamepad1);
         assistant = new BetterGamepad(gamepad2);
 
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Init();
         while (opModeInInit()) InitLoop();
     }
