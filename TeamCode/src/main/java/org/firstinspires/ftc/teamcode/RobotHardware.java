@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -11,10 +13,13 @@ import com.roboctopi.cuttlefish.utils.Direction;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleEncoder;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleMotor;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleRevHub;
+import com.roboctopi.cuttlefishftcbridge.devices.CuttleServo;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utils.BetterServo;
+import org.firstinspires.ftc.teamcode.utils.DistanceSensor;
 
 import java.util.List;
-
 
 @Config
 public class RobotHardware {
@@ -24,7 +29,10 @@ public class RobotHardware {
     public CuttleRevHub controlHub;
     public CuttleRevHub expansionHub;
     public CuttleMotor frontLeft, frontRight, backLeft, backRight, liftMotor_Left, liftMotor_Right, intake_AngleMotor, intake_spinyMotor;
-    public CuttleEncoder encoder_liftPosition, encoder_intake_Angle, encoder_driveBaseLeft, encoder_driveBaseRight;
+    public CuttleEncoder encoder_liftPosition, encoder_intake_Angle;
+    //public CuttleEncoder encoder_driveBaseLeft, encoder_driveBaseRight;
+    public BetterServo releaseServoLeft, releaseServoRight;
+    public DistanceSensor distanceSensor;
     List<LynxModule> allHubs;
 
     public RobotHardware(HardwareMap hw){
@@ -37,6 +45,8 @@ public class RobotHardware {
 
         allHubs = hw.getAll(LynxModule.class);
         controlHub = new CuttleRevHub(hw, CuttleRevHub.HubTypes.CONTROL_HUB);
+        controlHub.setI2CBusSpeed(CuttleRevHub.I2CSpeed.STANDARD);
+
         expansionHub = new CuttleRevHub(hw, "Expansion Hub 2");
 
         frontLeft = initMotor(controlHub, 2, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
@@ -50,10 +60,18 @@ public class RobotHardware {
         intake_spinyMotor = initMotor(expansionHub, 2, Direction.REVERSE, DcMotor.ZeroPowerBehavior.FLOAT);
 
         encoder_liftPosition = new CuttleEncoder(controlHub, 3, 530.05128205128);
+        encoder_liftPosition.setDirection(Direction.REVERSE);
         encoder_intake_Angle = new CuttleEncoder(controlHub, 0, 288d * 40 / 15);
         encoder_intake_Angle.setDirection(Direction.REVERSE);
-        encoder_driveBaseLeft = new CuttleEncoder(controlHub, 1, 28d * 84 / 29 * 76 / 21);
-        encoder_driveBaseRight = new CuttleEncoder(controlHub, 2, 28d * 84 / 29 * 76 / 21);
+//        encoder_driveBaseLeft = new CuttleEncoder(controlHub, 1, 28d * 84 / 29 * 76 / 21);
+//        encoder_driveBaseLeft.setDirection(Direction.FORWARD);
+//        encoder_driveBaseRight = new CuttleEncoder(controlHub, 2, 28d * 84 / 29 * 76 / 21);
+//        encoder_driveBaseRight.setDirection(Direction.FORWARD);
+
+        releaseServoLeft = new BetterServo(controlHub, 0, BetterServo.Direction.FORWARD);
+        releaseServoRight = new BetterServo(controlHub, 1, BetterServo.Direction.REVERSE);
+
+        distanceSensor = new DistanceSensor(hw, "distanceSensor");
     }
 
     public void setLeftPower(double power){
@@ -78,9 +96,7 @@ public class RobotHardware {
         return motor;
     }
 
-    private Servo initServo (HardwareMap hw, String servoPort, Servo.Direction direction){
-        Servo servo = hw.get(Servo.class, servoPort);
-        servo.setDirection(direction);
-        return servo;
+    private CuttleServo initServo (CuttleRevHub hub, int servoPort){
+        return new CuttleServo(hub, servoPort);
     }
 }
