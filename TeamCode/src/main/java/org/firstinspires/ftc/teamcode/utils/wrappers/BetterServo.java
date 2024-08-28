@@ -5,7 +5,6 @@ import com.roboctopi.cuttlefishftcbridge.devices.CuttleServo;
 
 public class BetterServo extends CuttleServo {
     private Direction direction = Direction.FORWARD;
-    private double prevPosition = 0;
 
     public BetterServo(CuttleRevHub revHub, int servoPort) {
         super(revHub, servoPort);
@@ -18,23 +17,16 @@ public class BetterServo extends CuttleServo {
 
     @Override
     public void setPosition(double position){
-        if (prevPosition != position) {
-            prevPosition = position;
-            if (direction.equals(Direction.REVERSE)) {
-                super.setPosition(1 - position);
-            } else {
-                super.setPosition(position);
-            }
+        if (direction.equals(Direction.REVERSE)){
+            super.setPosition(1 - position);
+        }
+        else{
+            super.setPosition(position);
         }
     }
 
     public void setDirection(Direction dir){
         direction = dir;
-    }
-
-    @Override
-    public double getPosition(){
-        return prevPosition;
     }
 
     public enum Direction{

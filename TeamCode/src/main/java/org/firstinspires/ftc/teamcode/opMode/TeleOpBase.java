@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
-import org.firstinspires.ftc.teamcode.utils.BetterGamepad;
+import org.firstinspires.ftc.teamcode.utils.wrappers.BetterGamepad;
 
 @Photon
 public abstract class TeleOpBase extends CommandOpMode {

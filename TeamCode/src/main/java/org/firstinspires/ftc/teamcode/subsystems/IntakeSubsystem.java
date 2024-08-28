@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
+import static java.lang.Thread.sleep;
+
 import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.LowPassFilter;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -28,10 +30,11 @@ public class IntakeSubsystem extends SubsystemBase {
     public static double slowDownSpeed_slow = 0.3;
     public static double errorMarin = 1;
 
-    public static double nominalSpeed = 0.85;
+    public static double nominalSpeed = 0.95;
     public static double maxAngleOffset = 18;
 
     public static double spinyMotorCurrentCap = 3250;
+    public static double angleMotorCalibrationCurrentCap = 1200;
     public static INTAKE_ANGLE currentState = INTAKE_ANGLE.DOWN;
 
     private double targetAngle = 0;
@@ -40,7 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private boolean goDown = false;
 
     private final LowPassFilter speedFilter = new LowPassFilter(0.9);
-    private PIDController anglePID = new PIDController(p, i, d);
+    private final PIDController anglePID = new PIDController(p, i, d);
 
     RobotHardware robot;
     Telemetry telemetry;
@@ -117,7 +120,15 @@ public class IntakeSubsystem extends SubsystemBase {
         telemetry.addData("intake angle: ", currentAngle);
         telemetry.addData("targetAngle: ", targetAngle);
         telemetry.addData("angleOffset: ", angleOffset);
-        telemetry.addData("spinyy motor current: ", robot.intake_spinyMotor.getCurrent());
+        telemetry.addData("spiny motor current: ", robot.intake_spinyMotor.getCurrent());
+    }
+
+    public void calibrateAngle() {
+        while(robot.intake_AngleMotor.getCurrent() < angleMotorCalibrationCurrentCap){
+            robot.intake_AngleMotor.setPower(-0.5);
+        }
+        robot.intake_AngleMotor.setPower(0);
+        robot.encoder_intake_Angle.reset();
     }
 
     public boolean overCurrentTriggered() {

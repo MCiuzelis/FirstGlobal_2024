@@ -20,33 +20,36 @@ public class BetterGamepad extends GamepadEx {
     public GamepadKeys.Button dpadRight = GamepadKeys.Button.DPAD_RIGHT;
     public GamepadKeys.Button leftBumper = GamepadKeys.Button.LEFT_BUMPER;
     public GamepadKeys.Button rightBumper = GamepadKeys.Button.RIGHT_BUMPER;
-    public GamepadKeys.Button M2 = GamepadKeys.Button.LEFT_STICK_BUTTON;
-    public GamepadKeys.Button M1 = GamepadKeys.Button.RIGHT_STICK_BUTTON;
+    public GamepadKeys.Button leftStickButton = GamepadKeys.Button.LEFT_STICK_BUTTON;
+    public GamepadKeys.Button rightStickButton = GamepadKeys.Button.RIGHT_STICK_BUTTON;
 
+
+    private Gamepad gamepad;
 
     public BetterGamepad(Gamepad gamepad) {
         super(gamepad);
+        this.gamepad = gamepad;
     }
 
     public void rumble (int durationMs){
-        super.gamepad.rumble(durationMs);
+        gamepad.rumble(durationMs);
     }
 
     public void rumble (double rumble1, double rumble2, int durationMs){
-        super.gamepad.rumble(rumble1, rumble2, durationMs);
+        gamepad.rumble(rumble1, rumble2, durationMs);
     }
 
     public float leftTrigger(){
-        return super.gamepad.left_trigger;
+        return gamepad.left_trigger;
     }
 
     public float rightTrigger(){
-        return super.gamepad.right_trigger;
+        return gamepad.right_trigger;
     }
 
     public Pose getGamepadInput(double driveScalar, double turnScalar){
-        double left_stick_x = rootInput(super.gamepad.left_stick_x);
-        double left_stick_y = rootInput(super.gamepad.left_stick_y);
+        double left_stick_x = rootInput(gamepad.left_stick_x);
+        double left_stick_y = rootInput(gamepad.left_stick_y);
         Vector2d drive = new Vector2d(left_stick_x, left_stick_y);
 
         double PositiveDriveAngle = Math.abs(drive.angle());
@@ -55,7 +58,7 @@ public class BetterGamepad extends GamepadEx {
         drive = drive.div(maximumNotScaledDownSpeedInARectangularContour);
         drive = drive.scale(drive.magnitude());
 
-        double turn = -super.gamepad.right_stick_x;
+        double turn = -gamepad.right_stick_x;
 
         drive = drive.scale(driveScalar);
         turn *= turnScalar;
