@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setFrontServoState;
+import org.firstinspires.ftc.teamcode.commands.wrappers.setIntakeAngleCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setIntakeSpeedCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setLiftHeightCommand;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
@@ -21,7 +22,10 @@ public class swollowBall extends SequentialCommandGroup {
                         ()-> lift.isBallPresent(LiftSubsystem.LIFT_POSITION.BLOCKING_INTAKE)
                 ),
                 new WaitUntilCommand(lift::liftReachedPosition),
-                new setIntakeState(intake, setIntakeState.IntakeState.UP),
+
+                new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
+                new setIntakeSpeedCommand(intake, IntakeSubsystem.nominalSpeed),
+
                 new WaitCommand(200),
                 new WaitUntilCommand(intake::overCurrentTriggered),
                 new InstantCommand(()->intake.setAngle(IntakeSubsystem.INTAKE_ANGLE.HOLDING_BALL)),

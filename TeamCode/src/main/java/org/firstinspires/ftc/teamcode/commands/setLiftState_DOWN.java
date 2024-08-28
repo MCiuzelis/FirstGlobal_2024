@@ -15,7 +15,7 @@ public class setLiftState_DOWN extends SequentialCommandGroup {
                         new SequentialCommandGroup(
                                 //if lift already up
                                 new setFrontServoState(lift, LiftSubsystem.SERVO_POSITION.RELEASE),
-                                new WaitCommand(3000),
+                                new WaitCommand(2000),
                                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN),
                                 new setFrontServoState(lift, LiftSubsystem.SERVO_POSITION.HOLD)
                         ),

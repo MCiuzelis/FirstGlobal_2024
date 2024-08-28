@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utils;
+package org.firstinspires.ftc.teamcode.utils.wrappers;
 
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleRevHub;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleServo;
