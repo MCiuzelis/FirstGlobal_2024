@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.utils;
+package org.firstinspires.ftc.teamcode.utils.wrappers;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
+
+import org.firstinspires.ftc.teamcode.utils.Pose;
 
 public class BetterGamepad extends GamepadEx {
     public GamepadKeys.Button circle = GamepadKeys.Button.B;
@@ -18,6 +20,9 @@ public class BetterGamepad extends GamepadEx {
     public GamepadKeys.Button dpadRight = GamepadKeys.Button.DPAD_RIGHT;
     public GamepadKeys.Button leftBumper = GamepadKeys.Button.LEFT_BUMPER;
     public GamepadKeys.Button rightBumper = GamepadKeys.Button.RIGHT_BUMPER;
+    public GamepadKeys.Button leftStickButton = GamepadKeys.Button.LEFT_STICK_BUTTON;
+    public GamepadKeys.Button rightStickButton = GamepadKeys.Button.RIGHT_STICK_BUTTON;
+
 
     private Gamepad gamepad;
 

@@ -39,8 +39,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
         robot.setLeftPower(leftFilter.estimate(powers[0]));
         robot.setRightPower(rightFilter.estimate(powers[1]));
-        telemetry.addData("leftPower(not scaled): ", leftPower);
-        telemetry.addData("rightPower(not scaled): ", rightPower);
+        telemetry.addData("leftPower: ", leftPower);
+        telemetry.addData("rightPower: ", rightPower);
     }
 
 
