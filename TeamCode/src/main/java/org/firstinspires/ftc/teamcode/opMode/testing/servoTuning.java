@@ -1,22 +1,16 @@
-package org.firstinspires.ftc.teamcode.opMode;
+package org.firstinspires.ftc.teamcode.opMode.testing;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.outoftheboxrobotics.photoncore.Photon;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commands.intakeBall;
-import org.firstinspires.ftc.teamcode.commands.kickBall;
-import org.firstinspires.ftc.teamcode.commands.setIntakeState;
-import org.firstinspires.ftc.teamcode.commands.setLiftState_DOWN;
-import org.firstinspires.ftc.teamcode.commands.setLiftState_UP;
-import org.firstinspires.ftc.teamcode.commands.swollowBall;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setFrontServoState;
-import org.firstinspires.ftc.teamcode.commands.wrappers.setLiftHeightCommand;
+import org.firstinspires.ftc.teamcode.opMode.TeleOpBase;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
+@Disabled
 @Config
 @Photon
 @TeleOp(name = "servoTuner")
