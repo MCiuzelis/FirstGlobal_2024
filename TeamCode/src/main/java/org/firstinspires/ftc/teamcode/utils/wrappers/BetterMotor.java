@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.utils.wrappers;
 
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleMotor;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleRevHub;
+import com.roboctopi.cuttlefishftcbridge.devices.CuttleServo;
 
 public class BetterMotor extends CuttleMotor {
     private double prevPower = 0;
