@@ -4,16 +4,18 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.roboctopi.cuttlefish.utils.Direction;
-import com.roboctopi.cuttlefishftcbridge.devices.CuttleMotor;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleRevHub;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleServo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.utils.wrappers.BetterDistanceSensor;
+import org.firstinspires.ftc.teamcode.utils.CoreHexMotorCurrentProvider;
+import org.firstinspires.ftc.teamcode.utils.wrappers.BetterSensor;
 import org.firstinspires.ftc.teamcode.utils.wrappers.BetterEncoder;
+import org.firstinspires.ftc.teamcode.utils.wrappers.BetterMotor;
 import org.firstinspires.ftc.teamcode.utils.wrappers.BetterServo;
 import org.firstinspires.ftc.teamcode.utils.RevColorSensorV3Provider;
 
@@ -26,11 +28,12 @@ public class RobotHardware {
 
     public CuttleRevHub controlHub;
     public CuttleRevHub expansionHub;
-    public CuttleMotor frontLeft, frontRight, backLeft, backRight, liftMotor_Left, liftMotor_Right, intake_AngleMotor, intake_spinyMotor;
+    public BetterMotor frontLeft, frontRight, backLeft, backRight, liftMotor_Left, liftMotor_Right, intake_AngleMotor, intake_spinyMotor;
     public BetterEncoder encoder_liftPosition, encoder_intake_Angle;
     //public CuttleEncoder encoder_driveBaseLeft, encoder_driveBaseRight;
     public BetterServo releaseServoLeft, releaseServoRight;
-    public BetterDistanceSensor sensor;
+    //public BetterSensor distanceSensor, spinyCurrentSensor;
+    public RevColorSensorV3 colorSensor;
     List<LynxModule> allHubs;
 
     public RobotHardware(HardwareMap hw){
@@ -43,7 +46,7 @@ public class RobotHardware {
 
         allHubs = hw.getAll(LynxModule.class);
         controlHub = new CuttleRevHub(hw, CuttleRevHub.HubTypes.CONTROL_HUB);
-        controlHub.setI2CBusSpeed(CuttleRevHub.I2CSpeed.STANDARD);
+        controlHub.setI2CBusSpeed(CuttleRevHub.I2CSpeed.HIGH_SPEED);
 
         expansionHub = new CuttleRevHub(hw, "Expansion Hub 2");
 
@@ -70,7 +73,9 @@ public class RobotHardware {
         releaseServoRight = new BetterServo(controlHub, 1, BetterServo.Direction.REVERSE);
 
         //distanceSensor = new DistanceSensor(hw, "distanceSensor");
-        sensor = new BetterDistanceSensor(new RevColorSensorV3Provider(hw, "colorSensor"));
+        //distanceSensor = new BetterSensor(new RevColorSensorV3Provider(hw, "colorSensor"));
+        //spinyCurrentSensor = new BetterSensor(new CoreHexMotorCurrentProvider(intake_spinyMotor));
+        colorSensor = hw.get(RevColorSensorV3.class, "colorSensor");
     }
 
     public void setLeftPower(double power){
@@ -88,8 +93,8 @@ public class RobotHardware {
         liftMotor_Right.setPower(power);
     }
 
-    private CuttleMotor initMotor(CuttleRevHub hub, int motorPort, Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
-        CuttleMotor motor = new CuttleMotor(hub, motorPort);
+    private BetterMotor initMotor(CuttleRevHub hub, int motorPort, Direction direction, DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
+        BetterMotor motor = new BetterMotor(hub, motorPort);
         motor.setDirection(direction);
         motor.setZeroPowerBehaviour(zeroPowerBehavior);
         return motor;

@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
 @Config
 @Photon
-@TeleOp(name = "mainTeleOP")
+@TeleOp(name = "MainTeleOP")
 
 public class MainOpMode extends TeleOpBase {
 
@@ -62,7 +62,7 @@ public class MainOpMode extends TeleOpBase {
         driver.getGamepadButton(driver.dpadUp)
                 .whenPressed(()-> schedule(new kickBall(intake)
                 ));
-        driver.getGamepadButton(driver.rightStickButton)
+        driver.getGamepadButton(driver.M1)
                 .whenPressed(()-> schedule(new SequentialCommandGroup(
                         new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
                         new setIntakeSpeedCommand(intake, 0)
@@ -80,18 +80,21 @@ public class MainOpMode extends TeleOpBase {
     @Override
     public void Loop() {
         robot.controlHub.pullBulkData();
+        robot.encoder_liftPosition.updatePosition();
+        robot.encoder_intake_Angle.updatePosition();
         intake.setAngleOffset(gamepad1.left_trigger);
 
         CommandScheduler.getInstance().run();
 
         double driveMultiplier = 1;
-        if (!driver.getButton(driver.leftStickButton)){
+        if (!driver.getButton(driver.M2)){
             driveMultiplier = lift.mapValue(lift.getHeight());
         }
 
         tank.loop(driver.getGamepadInput(driveMultiplier, driveMultiplier));
-        robot.sensor.process();
+        //robot.distanceSensor.process();
+        //robot.spinyCurrentSensor.process();
 
-        telemetry.addData("Robot's current draw: ", robot.controlHub.getBatteryCurrent());
+        //telemetry.addData("Robot's current draw: ", robot.controlHub.getBatteryCurrent());
     }
 }

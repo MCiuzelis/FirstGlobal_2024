@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 
-import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.LowPassFilter;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -10,6 +9,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 
 @Config
@@ -21,11 +21,11 @@ public class LiftSubsystem extends SubsystemBase {
     public static double intakeBlockingPosition = 6;
     public static double initialPosition = 0;
 
-    public static double left_servoHoldPos = 0.52;
-    public static double left_servoReleasePos = 0;
-    public static double left_servoIntakeBlockingPos = 0.62;
-    public static double right_servoHoldPos = 0.58;
-    public static double right_servoReleasePos = 0.3;
+    public static double left_servoHoldPos = 0.56;
+    public static double left_servoReleasePos = 0.29;
+    public static double left_servoIntakeBlockingPos = 0.9;
+    public static double right_servoHoldPos = 0.59;
+    public static double right_servoReleasePos = 0;
     public static double right_servoIntakeBlockingPos = 0.685;
 
     public static double errorMargin = 0.5;
@@ -55,7 +55,7 @@ public class LiftSubsystem extends SubsystemBase {
     public void periodic() {
         controller.setPIDF(p, i, d, f);
 
-        double currentPosition = robot.encoder_liftPosition.getRotation();
+        double currentPosition = robot.encoder_liftPosition.getPosition();
         double power = controller.calculate(currentPosition, targetPosition);
         telemetry.addData("lift target position: ", targetPosition);
         telemetry.addData("current lift position: ", currentPosition);
@@ -102,7 +102,7 @@ public class LiftSubsystem extends SubsystemBase {
     }
 
     public boolean liftReachedPosition(){
-        return robot.encoder_liftPosition.getRotation() > targetPosition - errorMargin && robot.encoder_liftPosition.getRotation() < targetPosition + errorMargin;
+        return robot.encoder_liftPosition.getPosition() > targetPosition - errorMargin && robot.encoder_liftPosition.getPosition() < targetPosition + errorMargin;
     }
 
     public boolean isLiftUP(){
@@ -110,7 +110,7 @@ public class LiftSubsystem extends SubsystemBase {
     }
 
     public boolean isBallPresent(LIFT_POSITION currentState){
-        double distance = robot.sensor.getDistance();
+        double distance = robot.colorSensor.getDistance(DistanceUnit.CM);
         switch (currentState){
             case DOWN:
                 return distance < distanceTargetWhenDown;
@@ -127,7 +127,7 @@ public class LiftSubsystem extends SubsystemBase {
     }
 
     public double getHeight(){
-        return robot.encoder_liftPosition.getRotation() / highPosition;
+        return robot.encoder_liftPosition.getPosition() / highPosition;
     }
 
     public double mapValue(double x) {
