@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.opMode.testing;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.outoftheboxrobotics.photoncore.Photon;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.opMode.TeleOpBase;
 
+@Disabled
 @Config
 @Photon
 @TeleOp(name = "gamapedTester")

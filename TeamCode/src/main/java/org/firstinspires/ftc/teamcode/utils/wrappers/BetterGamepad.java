@@ -20,8 +20,8 @@ public class BetterGamepad extends GamepadEx {
     public GamepadKeys.Button dpadRight = GamepadKeys.Button.DPAD_RIGHT;
     public GamepadKeys.Button leftBumper = GamepadKeys.Button.LEFT_BUMPER;
     public GamepadKeys.Button rightBumper = GamepadKeys.Button.RIGHT_BUMPER;
-    public GamepadKeys.Button leftStickButton = GamepadKeys.Button.LEFT_STICK_BUTTON;
-    public GamepadKeys.Button rightStickButton = GamepadKeys.Button.RIGHT_STICK_BUTTON;
+    public GamepadKeys.Button M2 = GamepadKeys.Button.LEFT_STICK_BUTTON;
+    public GamepadKeys.Button M1 = GamepadKeys.Button.RIGHT_STICK_BUTTON;
 
 
     private Gamepad gamepad;
