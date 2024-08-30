@@ -5,6 +5,7 @@ import com.roboctopi.cuttlefishftcbridge.devices.CuttleRevHub;
 
 public class BetterEncoder extends CuttleEncoder {
     private double offset = 0;
+    private double position = 0;
 
     public BetterEncoder(CuttleRevHub revHub, int port, double countsPerRevolution) {
         super(revHub, port, countsPerRevolution);
@@ -14,8 +15,12 @@ public class BetterEncoder extends CuttleEncoder {
         offset = super.getRotation();
     }
 
-    @Override
-    public double getRotation(){
-        return super.getRotation() - offset;
+
+    public void updatePosition(){
+        position = super.getRotation() - offset;
+    }
+
+    public double getPosition(){
+        return position;
     }
 }

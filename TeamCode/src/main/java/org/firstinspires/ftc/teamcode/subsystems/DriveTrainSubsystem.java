@@ -31,7 +31,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
         double turn = clamp(input.getTurn(), -turnOutputCap, turnOutputCap);
 
         if (drive != 0) turn *= clamp(Math.abs(drive + Math.signum(drive) * 0.2), 0, 1) * Math.signum(drive);
-        else turn *= 1;
 
         double leftPower = drive - turn;
         double rightPower = drive + turn;
@@ -46,9 +45,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     private double[] getScaledPowerOutputs(double... powers){
         double maxPower = 0;
-        for(int i = 0; i < powers.length; i++){
-            double power = Math.abs(powers[i]);
-            if (power > maxPower){
+        for (double p : powers) {
+            double power = Math.abs(p);
+            if (power > maxPower) {
                 maxPower = power;
             }
         }

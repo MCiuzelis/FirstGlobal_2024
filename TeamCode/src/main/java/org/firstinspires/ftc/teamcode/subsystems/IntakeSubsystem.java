@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
-import static java.lang.Thread.sleep;
-
 import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.LowPassFilter;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -120,7 +118,6 @@ public class IntakeSubsystem extends SubsystemBase {
         telemetry.addData("intake angle: ", currentAngle);
         telemetry.addData("targetAngle: ", targetAngle);
         telemetry.addData("angleOffset: ", angleOffset);
-        telemetry.addData("spiny motor current: ", robot.intake_spinyMotor.getCurrent());
     }
 
     public void calibrateAngle() {
@@ -132,11 +129,13 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean overCurrentTriggered() {
-        return robot.intake_spinyMotor.getCurrent() > spinyMotorCurrentCap;
+        double current = robot.intake_spinyMotor.getCurrent();
+        telemetry.addData("spiny motor current: ", current);
+        return current > spinyMotorCurrentCap;
     }
 
     private double getAngleDegrees(){
-        return Math.toDegrees(robot.encoder_intake_Angle.getRotation()) + angle_DOWN;
+        return Math.toDegrees(robot.encoder_intake_Angle.getPosition()) + angle_DOWN;
     }
 
     public INTAKE_ANGLE getCurrentState(){

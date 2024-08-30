@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.commands.wrappers.setFrontServoState;
 import org.firstinspires.ftc.teamcode.opMode.TeleOpBase;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
-@Disabled
 @Config
 @Photon
 @TeleOp(name = "servoTuner")
