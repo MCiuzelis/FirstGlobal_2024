@@ -24,7 +24,7 @@ public class swallowBall_Inside extends SequentialCommandGroup {
                 new WaitUntilCommand(lift::liftReachedPosition),
 
                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
-                new setIntakeSpeedCommand(intake, 0.85),
+                new setIntakeSpeedCommand(intake, IntakeSubsystem.nominalSpeed),
 
                 new WaitCommand(200),
                 new WaitUntilCommand(()-> intake.overCurrentTriggered(1)),

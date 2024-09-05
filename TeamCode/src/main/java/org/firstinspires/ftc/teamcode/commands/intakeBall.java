@@ -23,10 +23,10 @@ public class intakeBall extends SequentialCommandGroup {
 
                         //if LIFT DOWN
                         new SequentialCommandGroup(
-                                new setFrontServoState(lift, LiftSubsystem.SERVO_POSITION.HOLD),
+                                new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
                                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.INITIAL),
                                 new WaitUntilCommand(lift::liftReachedPosition),
-                                new setFrontServoState(lift, LiftSubsystem.SERVO_POSITION.RELEASE),
+                                new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.RELEASE),
                                 new WaitCommand(100),
 
                                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
@@ -41,7 +41,7 @@ public class intakeBall extends SequentialCommandGroup {
                                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
                                 new WaitCommand(150),
 
-                                new setFrontServoState(lift, LiftSubsystem.SERVO_POSITION.HOLD),
+                                new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
                                 new WaitCommand(500),
                                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN)
                         ),

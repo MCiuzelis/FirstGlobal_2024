@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -18,6 +16,7 @@ public class LiftSubsystem extends SubsystemBase {
     public static double highPosition = 82.5;
     public static double lowPosition = 60;
     public static double midPosition = 70;
+    public static double transferPosition = 21;
     public static double intakeBlockingPosition = 6;
     public static double initialPosition = 0;
 
@@ -28,10 +27,12 @@ public class LiftSubsystem extends SubsystemBase {
     public static double right_servoReleasePos = 0;
     public static double right_servoIntakeBlockingPos = 0.685;
 
-    public static double errorMargin = 0.5;
+    public static double topServoHoldPos = 0;
+    public static double topServoReleasePos = 0;
+    public static double topServoBlockingPos = 0;
+    public static double topServoFoldedPos = 0;
 
-//    public static double distanceTargetWhenDown = 18;
-//    public static double distanceTargetWhenBlockingIntake = 20;
+    public static double errorMargin = 0.5;
 
     public static double distanceTargetWhenDown = 5;
     public static double distanceTargetWhenBlockingIntake = 5;
@@ -59,7 +60,7 @@ public class LiftSubsystem extends SubsystemBase {
         double power = controller.calculate(currentPosition, targetPosition);
         telemetry.addData("lift target position: ", targetPosition);
         telemetry.addData("current lift position: ", currentPosition);
-        power = clamp(power, -0.5, 1);
+        power = clamp(power, -0.75, 1);
         robot.setLiftPower(power);
     }
 
@@ -71,6 +72,9 @@ public class LiftSubsystem extends SubsystemBase {
             case DOWN:
             case BLOCKING_INTAKE:
                 targetPosition = intakeBlockingPosition;
+                break;
+            case TRANSFER:
+                targetPosition = transferPosition;
                 break;
             case LOW:
                 targetPosition = lowPosition;
@@ -84,7 +88,7 @@ public class LiftSubsystem extends SubsystemBase {
         }
     }
 
-    public void update(SERVO_POSITION position){
+    public void update(BUCKET_SERVO_POSITION position){
         switch (position) {
             case RELEASE:
                 robot.releaseServoLeft.setPosition(left_servoReleasePos);
@@ -101,8 +105,41 @@ public class LiftSubsystem extends SubsystemBase {
         }
     }
 
+    public void update(TOP_SERVO_POSITION position){
+        switch (position){
+            case RELEASE:
+                robot.topServoLeft.setPosition(topServoReleasePos);
+                robot.topServoRight.setPosition(topServoReleasePos);
+                break;
+            case HOLD:
+                robot.topServoLeft.setPosition(topServoHoldPos);
+                robot.topServoRight.setPosition(topServoHoldPos);
+                break;
+            case BLOCKING:
+                robot.topServoLeft.setPosition(topServoBlockingPos);
+                robot.topServoRight.setPosition(topServoBlockingPos);
+                break;
+            case FOLDED:
+                robot.topServoLeft.setPosition(topServoFoldedPos);
+                robot.topServoRight.setPosition(topServoFoldedPos);
+                break;
+        }
+    }
+
     public boolean liftReachedPosition(){
         return robot.encoder_liftPosition.getPosition() > targetPosition - errorMargin && robot.encoder_liftPosition.getPosition() < targetPosition + errorMargin;
+    }
+
+    public boolean areServosExtended(){
+        return robot.releaseServoLeft.getPosition() == left_servoHoldPos;
+    }
+
+    public boolean isLiftAboveTransferPos(){
+        return robot.encoder_liftPosition.getPosition() > transferPosition + errorMargin;
+    }
+
+    public boolean isliftCloseToTransferPos(){
+        return robot.encoder_liftPosition.getPosition() < transferPosition + 9;
     }
 
     public boolean isLiftUP(){
@@ -130,28 +167,31 @@ public class LiftSubsystem extends SubsystemBase {
         return robot.encoder_liftPosition.getPosition() / highPosition;
     }
 
-    public double mapValue(double x) {
-        double a1 = 6 / 82.5;
-        double b1 = 1;
-        double a2 = 1;
-        double b2 = 0.3;
-
-        x = clamp(x, a1, b1);
-        return a2 + ((x - a1) * (b2 - a2) / (b1 - a1));
+    public double mapValue(double variable, double min_IN, double max_IN, double min_OUT, double max_OUT) {
+        variable = clamp(variable, min_IN, max_IN);
+        return min_OUT + ((variable - min_IN) * (max_OUT - min_OUT) / (max_IN - min_IN));
     }
 
     public enum LIFT_POSITION {
         INITIAL,
         BLOCKING_INTAKE,
         DOWN,
+        TRANSFER,
         LOW,
         MID,
         HIGH,
     }
 
-    public enum SERVO_POSITION{
+    public enum BUCKET_SERVO_POSITION {
         RELEASE,
         HOLD,
         BLOCK_INTAKE
+    }
+
+    public enum TOP_SERVO_POSITION {
+        HOLD,
+        RELEASE,
+        BLOCKING,
+        FOLDED
     }
 }

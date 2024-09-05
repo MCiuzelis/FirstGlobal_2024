@@ -32,6 +32,11 @@ public class BetterServo extends CuttleServo {
         direction = dir;
     }
 
+    @Override
+    public double getPosition(){
+        return prevPosition;
+    }
+
     public enum Direction{
         FORWARD,
         REVERSE
