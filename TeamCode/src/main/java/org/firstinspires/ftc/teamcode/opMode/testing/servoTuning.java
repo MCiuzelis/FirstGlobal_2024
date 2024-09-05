@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opMode.testing;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.outoftheboxrobotics.photoncore.Photon;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.wrappers.setFrontServoState;
@@ -20,11 +19,11 @@ public class servoTuning extends TeleOpBase {
     public void Init() {
         //driver gamepad commands:
         driver.getGamepadButton(driver.triangle)
-                .whenPressed(()-> schedule(new setFrontServoState(lift, LiftSubsystem.SERVO_POSITION.HOLD)));
+                .whenPressed(()-> schedule(new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD)));
         driver.getGamepadButton(driver.cross)
-                .whenPressed(()-> schedule(new setFrontServoState(lift, LiftSubsystem.SERVO_POSITION.RELEASE)));
+                .whenPressed(()-> schedule(new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.RELEASE)));
         driver.getGamepadButton(driver.square)
-                .whenPressed(()-> schedule(new setFrontServoState(lift, LiftSubsystem.SERVO_POSITION.BLOCK_INTAKE)));
+                .whenPressed(()-> schedule(new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.BLOCK_INTAKE)));
     }
 
     @Override

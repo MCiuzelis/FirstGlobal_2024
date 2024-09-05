@@ -21,8 +21,10 @@ public class IntakeSubsystem extends SubsystemBase {
     public static double angle_DOWN = 9;
     public static double angleSlowDown = 22;
     public static double angle_UP = 67;
+    public static double angle_TRANSFER = 165;
     public static double angle_SPIN_OUT = 55;
     public static double angle_HOLDING_BALL = 45;
+    public static double angle_HOLDING_BALL_OUTSIDE = 32;
 
     public static double slowDownSpeed_fast = 4;
     public static double slowDownSpeed_slow = 0.3;
@@ -31,7 +33,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public static double nominalSpeed = 0.95;
     public static double maxAngleOffset = 18;
 
-    public static double spinyMotorCurrentCap = 3250;
+    public static double spinyMotorCurrentCap = 3300;
     public static double angleMotorCalibrationCurrentCap = 1200;
     public static INTAKE_ANGLE currentState = INTAKE_ANGLE.DOWN;
 
@@ -41,6 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private boolean goDown = false;
 
     private final LowPassFilter speedFilter = new LowPassFilter(0.9);
+    private final LowPassFilter currentFilter = new LowPassFilter(0.7);
     private final PIDController anglePID = new PIDController(p, i, d);
 
     RobotHardware robot;
@@ -62,10 +65,20 @@ public class IntakeSubsystem extends SubsystemBase {
                 targetAngle = angle_UP;
                 currentState = INTAKE_ANGLE.UP;
                 break;
-            case HOLDING_BALL:
+            case TRANSFER:
+                goDown = false;
+                targetAngle = angle_TRANSFER;
+                currentState = INTAKE_ANGLE.TRANSFER;
+                break;
+            case HOLDING_BALL_INSIDE:
                 goDown = false;
                 targetAngle = angle_HOLDING_BALL;
-                currentState = INTAKE_ANGLE.HOLDING_BALL;
+                currentState = INTAKE_ANGLE.HOLDING_BALL_INSIDE;
+                break;
+            case HOLDING_BALL_OUTSIDE:
+                goDown = false;
+                targetAngle = angle_HOLDING_BALL_OUTSIDE;
+                currentState = INTAKE_ANGLE.HOLDING_BALL_INSIDE;
                 break;
             case SPIN_OUT:
                 goDown = false;
@@ -100,16 +113,19 @@ public class IntakeSubsystem extends SubsystemBase {
         }
 
         if (currentAngle <= angle_DOWN + errorMarin) goDown = false;
-        targetAngle = clamp(targetAngle, angle_DOWN, angle_UP);
+        targetAngle = clamp(targetAngle, angle_DOWN, angle_TRANSFER);
 
         double anglePower;
-        if (currentState != INTAKE_ANGLE.HOLDING_BALL) {
+        if (currentState != INTAKE_ANGLE.HOLDING_BALL_INSIDE && currentState != INTAKE_ANGLE.HOLDING_BALL_OUTSIDE) {
             anglePower = anglePID.calculate(currentAngle, targetAngle - angleOffset) + Math.sin(Math.toRadians(currentAngle)) * f;
         }
         else{
             anglePower = anglePID.calculate(currentAngle, targetAngle) + Math.sin(Math.toRadians(currentAngle)) * f;
         }
-        if (currentAngle <= angle_DOWN + errorMarin && targetAngle != angle_UP) anglePower = 0;
+        if (currentAngle <= angle_DOWN + errorMarin) {
+            if (targetAngle != angle_TRANSFER && targetAngle != angle_UP)
+            anglePower = 0;
+        }
 
         robot.intake_AngleMotor.setPower(anglePower);
         robot.intake_spinyMotor.setPower(speedFilter.estimate(targetSpeed));
@@ -128,10 +144,10 @@ public class IntakeSubsystem extends SubsystemBase {
         robot.encoder_intake_Angle.reset();
     }
 
-    public boolean overCurrentTriggered() {
+    public boolean overCurrentTriggered(double speed) {
         double current = robot.intake_spinyMotor.getCurrent();
         telemetry.addData("spiny motor current: ", current);
-        return current > spinyMotorCurrentCap;
+        return currentFilter.estimate(current) > spinyMotorCurrentCap * Math.abs(speed);
     }
 
     private double getAngleDegrees(){
@@ -145,7 +161,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public enum INTAKE_ANGLE{
         DOWN,
         UP,
+        TRANSFER,
         SPIN_OUT,
-        HOLDING_BALL
+        HOLDING_BALL_INSIDE,
+        HOLDING_BALL_OUTSIDE
     }
 }

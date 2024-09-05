@@ -60,8 +60,8 @@ public abstract class TeleOpBase extends CommandOpMode {
     }
 
     public abstract void Init();
-    public void InitLoop(){};
-    public void Start(){};
+    public void InitLoop(){}
+    public void Start(){}
     public abstract void Loop();
-    public void Stop(){};
+    public void Stop(){}
 }

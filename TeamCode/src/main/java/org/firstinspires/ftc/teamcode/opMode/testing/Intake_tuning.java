@@ -13,10 +13,10 @@ import org.firstinspires.ftc.teamcode.commands.wrappers.setIntakeSpeedCommand;
 import org.firstinspires.ftc.teamcode.opMode.TeleOpBase;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
-@Disabled
+//@Disabled
 @Config
 @Photon
-@TeleOp(name = "PID")
+@TeleOp(name = "INTAKE test")
 
 public class Intake_tuning extends TeleOpBase {
     public static double power = 0.5;
@@ -34,6 +34,11 @@ public class Intake_tuning extends TeleOpBase {
                         new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
                         new setIntakeSpeedCommand(intake, 0)
                 )));
+        driver.getGamepadButton(driver.dpadLeft)
+                .whenPressed(()-> schedule(new SequentialCommandGroup(
+                        new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.TRANSFER),
+                        new setIntakeSpeedCommand(intake, 0)
+                )));
     }
 
     @Override
@@ -44,6 +49,8 @@ public class Intake_tuning extends TeleOpBase {
     public void Loop() {
         robot.controlHub.pullBulkData();
         intake.setAngleOffset(gamepad1.left_trigger);
+        robot.encoder_liftPosition.updatePosition();
+        robot.encoder_intake_Angle.updatePosition();
         CommandScheduler.getInstance().run();
     }
 }
