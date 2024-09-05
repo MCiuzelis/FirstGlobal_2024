@@ -30,11 +30,9 @@ public class RobotHardware {
     public CuttleRevHub expansionHub;
     public BetterMotor frontLeft, frontRight, backLeft, backRight, liftMotor_Left, liftMotor_Right, intake_AngleMotor, intake_spinyMotor;
     public BetterEncoder encoder_liftPosition, encoder_intake_Angle;
-    //public CuttleEncoder encoder_driveBaseLeft, encoder_driveBaseRight;
-    public BetterServo releaseServoLeft, releaseServoRight;
+    public BetterServo releaseServoLeft, releaseServoRight, topServoLeft, topServoRight;
     //public BetterSensor distanceSensor, spinyCurrentSensor;
     public RevColorSensorV3 colorSensor;
-    List<LynxModule> allHubs;
 
     public RobotHardware(HardwareMap hw){
         this.hw = hw;
@@ -44,7 +42,6 @@ public class RobotHardware {
     public void initialiseHardware(Telemetry telemetry) {
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        allHubs = hw.getAll(LynxModule.class);
         controlHub = new CuttleRevHub(hw, CuttleRevHub.HubTypes.CONTROL_HUB);
         controlHub.setI2CBusSpeed(CuttleRevHub.I2CSpeed.HIGH_SPEED);
 
@@ -58,7 +55,7 @@ public class RobotHardware {
         liftMotor_Left = initMotor(expansionHub, 0, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor_Right = initMotor(expansionHub, 1, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
         intake_AngleMotor = initMotor(expansionHub, 3, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
-        intake_spinyMotor = initMotor(expansionHub, 2, Direction.REVERSE, DcMotor.ZeroPowerBehavior.FLOAT);
+        intake_spinyMotor = initMotor(expansionHub, 2, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
 
         encoder_liftPosition = new BetterEncoder(controlHub, 3, 530.05128205128);
         encoder_liftPosition.setDirection(Direction.REVERSE);
@@ -71,6 +68,9 @@ public class RobotHardware {
 
         releaseServoLeft = new BetterServo(controlHub, 0, BetterServo.Direction.FORWARD);
         releaseServoRight = new BetterServo(controlHub, 1, BetterServo.Direction.REVERSE);
+
+        topServoLeft = new BetterServo(controlHub, 2, BetterServo.Direction.FORWARD);
+        topServoRight = new BetterServo(controlHub, 3, BetterServo.Direction.REVERSE);
 
         //distanceSensor = new DistanceSensor(hw, "distanceSensor");
         //distanceSensor = new BetterSensor(new RevColorSensorV3Provider(hw, "colorSensor"));
@@ -98,9 +98,5 @@ public class RobotHardware {
         motor.setDirection(direction);
         motor.setZeroPowerBehaviour(zeroPowerBehavior);
         return motor;
-    }
-
-    private CuttleServo initServo (CuttleRevHub hub, int servoPort){
-        return new CuttleServo(hub, servoPort);
     }
 }

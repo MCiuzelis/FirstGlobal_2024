@@ -12,13 +12,13 @@ import org.firstinspires.ftc.teamcode.commands.wrappers.setLiftHeightCommand;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
-public class swollowBall extends SequentialCommandGroup {
-    public swollowBall(LiftSubsystem lift, IntakeSubsystem intake){
+public class swallowBall_Inside extends SequentialCommandGroup {
+    public swallowBall_Inside(LiftSubsystem lift, IntakeSubsystem intake){
         addCommands(
                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.BLOCKING_INTAKE),
                 new ConditionalCommand(
-                        new setFrontServoState(lift, LiftSubsystem.SERVO_POSITION.HOLD),
-                        new setFrontServoState(lift, LiftSubsystem.SERVO_POSITION.BLOCK_INTAKE),
+                        new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
+                        new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.BLOCK_INTAKE),
                         ()-> lift.isBallPresent(LiftSubsystem.LIFT_POSITION.BLOCKING_INTAKE)
                 ),
                 new WaitUntilCommand(lift::liftReachedPosition),
@@ -27,8 +27,8 @@ public class swollowBall extends SequentialCommandGroup {
                 new setIntakeSpeedCommand(intake, IntakeSubsystem.nominalSpeed),
 
                 new WaitCommand(200),
-                new WaitUntilCommand(intake::overCurrentTriggered),
-                new InstantCommand(()->intake.setAngle(IntakeSubsystem.INTAKE_ANGLE.HOLDING_BALL)),
+                new WaitUntilCommand(()-> intake.overCurrentTriggered(1)),
+                new InstantCommand(()->intake.setAngle(IntakeSubsystem.INTAKE_ANGLE.HOLDING_BALL_INSIDE)),
                 new setIntakeSpeedCommand(intake, 0)
         );
         addRequirements(lift, intake);
