@@ -20,6 +20,10 @@ public class BetterEncoder extends CuttleEncoder {
         position = super.getRotation() - offset;
     }
 
+    public double getVelocity(){
+        return super.getVelocity();
+    }
+
     public double getPosition(){
         return position;
     }

@@ -3,23 +3,16 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.roboctopi.cuttlefish.utils.Direction;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleRevHub;
-import com.roboctopi.cuttlefishftcbridge.devices.CuttleServo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.utils.CoreHexMotorCurrentProvider;
-import org.firstinspires.ftc.teamcode.utils.wrappers.BetterSensor;
 import org.firstinspires.ftc.teamcode.utils.wrappers.BetterEncoder;
 import org.firstinspires.ftc.teamcode.utils.wrappers.BetterMotor;
 import org.firstinspires.ftc.teamcode.utils.wrappers.BetterServo;
-import org.firstinspires.ftc.teamcode.utils.RevColorSensorV3Provider;
-
-import java.util.List;
 
 @Config
 public class RobotHardware {
@@ -29,7 +22,7 @@ public class RobotHardware {
     public CuttleRevHub controlHub;
     public CuttleRevHub expansionHub;
     public BetterMotor frontLeft, frontRight, backLeft, backRight, liftMotor_Left, liftMotor_Right, intake_AngleMotor, intake_spinyMotor;
-    public BetterEncoder encoder_liftPosition, encoder_intake_Angle;
+    public BetterEncoder encoder_liftPosition, encoder_intake_Angle, encoder_intake_Speed;
     public BetterServo releaseServoLeft, releaseServoRight, topServoLeft, topServoRight;
     //public BetterSensor distanceSensor, spinyCurrentSensor;
     public RevColorSensorV3 colorSensor;
@@ -61,6 +54,8 @@ public class RobotHardware {
         encoder_liftPosition.setDirection(Direction.REVERSE);
         encoder_intake_Angle = new BetterEncoder(controlHub, 0, 288d * 40 / 15);
         encoder_intake_Angle.setDirection(Direction.REVERSE);
+        encoder_intake_Speed = new BetterEncoder(controlHub, 1, 288);
+        encoder_intake_Speed.setDirection(Direction.REVERSE);
 //        encoder_driveBaseLeft = new CuttleEncoder(controlHub, 1, 28d * 84 / 29 * 76 / 21);
 //        encoder_driveBaseLeft.setDirection(Direction.FORWARD);
 //        encoder_driveBaseRight = new CuttleEncoder(controlHub, 2, 28d * 84 / 29 * 76 / 21);
@@ -76,6 +71,7 @@ public class RobotHardware {
         //distanceSensor = new BetterSensor(new RevColorSensorV3Provider(hw, "colorSensor"));
         //spinyCurrentSensor = new BetterSensor(new CoreHexMotorCurrentProvider(intake_spinyMotor));
         colorSensor = hw.get(RevColorSensorV3.class, "colorSensor");
+        //ballIntakeSensor = hw.get(RevColorSensorV3.class, "intakeColorSensor");
     }
 
     public void setLeftPower(double power){
