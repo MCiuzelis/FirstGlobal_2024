@@ -6,11 +6,13 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.commands.wrappers.emptyCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setFrontServoState;
+import org.firstinspires.ftc.teamcode.commands.wrappers.setIntakeAngleCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setLiftHeightCommand;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
 public class setLiftState_DOWN extends SequentialCommandGroup {
-    public setLiftState_DOWN(LiftSubsystem lift){
+    public setLiftState_DOWN(IntakeSubsystem intake, LiftSubsystem lift){
         addCommands(
                 new ConditionalCommand(
                         new SequentialCommandGroup(
@@ -18,7 +20,9 @@ public class setLiftState_DOWN extends SequentialCommandGroup {
                                 new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.RELEASE),
                                 new WaitCommand(1800),
                                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN),
-                                new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD)
+                                new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
+                                new WaitCommand(200),
+                                new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.HOLDING_BALL_OUTSIDE)
                         ),
                         new SequentialCommandGroup(
                                 //lift down or in the middle of travel
@@ -37,6 +41,6 @@ public class setLiftState_DOWN extends SequentialCommandGroup {
                         lift::liftReachedPosition
                 )
         );
-        addRequirements(lift);
+        addRequirements(intake, lift);
     }
 }

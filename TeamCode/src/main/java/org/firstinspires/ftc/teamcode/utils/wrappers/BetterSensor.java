@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.utils.wrappers;
 
 import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.LowPassFilter;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.utils.DistanceProvider;
+import org.firstinspires.ftc.teamcode.utils.uselessThreads.DistanceProvider;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;

@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 public class LiftSubsystem extends SubsystemBase {
 
     public static double highPosition = 82.5;
-    public static double lowPosition = 60;
-    public static double midPosition = 70;
+    public static double lowPosition = 65;
+    public static double midPosition = 74;
     public static double transferPosition = 21;
     public static double intakeBlockingPosition = 6;
     public static double initialPosition = 0;
@@ -36,6 +36,8 @@ public class LiftSubsystem extends SubsystemBase {
 
     public static double distanceTargetWhenDown = 5;
     public static double distanceTargetWhenBlockingIntake = 5;
+
+    public BALL_STATE currentBallState = BALL_STATE.NOT_IN_TRANSFER;
 
     public static double p = 0.8;
     public static double i = 0.0037;
@@ -126,6 +128,14 @@ public class LiftSubsystem extends SubsystemBase {
         }
     }
 
+    public void setBallState(BALL_STATE state){
+        currentBallState = state;
+    }
+
+    public BALL_STATE getBallState(){
+        return currentBallState;
+    }
+
     public boolean liftReachedPosition(){
         return robot.encoder_liftPosition.getPosition() > targetPosition - errorMargin && robot.encoder_liftPosition.getPosition() < targetPosition + errorMargin;
     }
@@ -138,12 +148,16 @@ public class LiftSubsystem extends SubsystemBase {
         return robot.encoder_liftPosition.getPosition() > transferPosition + errorMargin;
     }
 
-    public boolean isliftCloseToTransferPos(){
+    public boolean isLiftCloseToTransferPos(){
         return robot.encoder_liftPosition.getPosition() < transferPosition + 9;
     }
 
+    public boolean isLiftHighEnoughToFoldIntake(){
+        return robot.encoder_liftPosition.getPosition() > 40;
+    }
+
     public boolean isLiftUP(){
-        return targetPosition == highPosition;
+        return robot.encoder_liftPosition.getPosition() >= lowPosition;
     }
 
     public boolean isBallPresent(LIFT_POSITION currentState){
@@ -193,5 +207,10 @@ public class LiftSubsystem extends SubsystemBase {
         RELEASE,
         BLOCKING,
         FOLDED
+    }
+
+    public enum BALL_STATE {
+        IN_TRANSFER,
+        NOT_IN_TRANSFER
     }
 }
