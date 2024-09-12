@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode.opMode.testing;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.outoftheboxrobotics.photoncore.Photon;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.wrappers.setFrontServoState;
 import org.firstinspires.ftc.teamcode.opMode.TeleOpBase;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
+@Disabled
 @Config
 @Photon
 @TeleOp(name = "servoTuner")

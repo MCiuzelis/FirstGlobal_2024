@@ -8,6 +8,7 @@ import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.commands.swallowBall_Outside;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setIntakeAngleCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setIntakeSpeedCommand;
 import org.firstinspires.ftc.teamcode.opMode.TeleOpBase;
@@ -39,6 +40,10 @@ public class Intake_tuning extends TeleOpBase {
                         new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.TRANSFER),
                         new setIntakeSpeedCommand(intake, 0)
                 )));
+        driver.getGamepadButton(driver.dpadLeft)
+                .whenPressed(()-> schedule(
+                        new swallowBall_Outside(lift, intake)
+                ));
     }
 
     @Override
