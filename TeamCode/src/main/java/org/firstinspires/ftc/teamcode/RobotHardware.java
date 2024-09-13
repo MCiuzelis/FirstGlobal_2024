@@ -47,15 +47,14 @@ public class RobotHardware {
 
         liftMotor_Left = initMotor(expansionHub, 0, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor_Right = initMotor(expansionHub, 1, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
-        intake_AngleMotor = initMotor(expansionHub, 3, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
-        intake_spinyMotor = initMotor(expansionHub, 2, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
+        intake_AngleMotor = initMotor(expansionHub, 3, Direction.REVERSE, DcMotor.ZeroPowerBehavior.FLOAT);
+        intake_spinyMotor = initMotor(expansionHub, 2, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
 
         encoder_liftPosition = new BetterEncoder(controlHub, 3, 530.05128205128);
         encoder_liftPosition.setDirection(Direction.REVERSE);
         encoder_intake_Angle = new BetterEncoder(controlHub, 0, 288d * 40 / 15);
         encoder_intake_Angle.setDirection(Direction.REVERSE);
-        encoder_intake_Speed = new BetterEncoder(controlHub, 1, 288);
-        encoder_intake_Speed.setDirection(Direction.REVERSE);
+
 //        encoder_driveBaseLeft = new CuttleEncoder(controlHub, 1, 28d * 84 / 29 * 76 / 21);
 //        encoder_driveBaseLeft.setDirection(Direction.FORWARD);
 //        encoder_driveBaseRight = new CuttleEncoder(controlHub, 2, 28d * 84 / 29 * 76 / 21);
