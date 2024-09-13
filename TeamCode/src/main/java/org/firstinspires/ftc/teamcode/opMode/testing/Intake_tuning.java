@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.commands.wrappers.setIntakeSpeedCommand;
 import org.firstinspires.ftc.teamcode.opMode.TeleOpBase;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
-//@Disabled
+@Disabled
 @Config
 @Photon
 @TeleOp(name = "INTAKE test")

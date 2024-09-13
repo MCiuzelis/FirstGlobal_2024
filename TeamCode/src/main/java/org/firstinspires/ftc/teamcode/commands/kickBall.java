@@ -40,7 +40,7 @@ public class kickBall extends SequentialCommandGroup {
                         ),
                         new SequentialCommandGroup(
                                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
-                                new setIntakeSpeedCommand(intake, IntakeSubsystem.nominalSpeed),
+                                new setIntakeSpeedCommand(intake, 0.85),
 
                                 new WaitCommand(300),
 
