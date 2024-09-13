@@ -18,13 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public static double d = 0.002;
     public static double f = 0.48;
 
-    public static double f_spin = 0.1;
-
-    public static double p_hold = 0.05;
-    public static double i_hold = 4.5;
-    public static double d_hold = 0;
-
-    public static double angle_DOWN = 9;
+    public static double angle_DOWN = 9.5;
     public static double angleSlowDown = 22;
     public static double angle_UP = 67;
     public static double angle_TRANSFER = 165;
@@ -33,22 +27,20 @@ public class IntakeSubsystem extends SubsystemBase {
     public static double angle_HOLDING_BALL_OUTSIDE = 50;
     public static double angle_FOLDED = 200;
 
-    public static double slowDownSpeed_fast = 2;
-    public static double slowDownSpeed_slow = 0.2;
-    public static double errorMarin = 1;
+    public static double slowDownSpeed_fast = 1.5;
+    public static double slowDownSpeed_slow = 0.15;
+    public static double errorMarin = 1.5;
 
-    public static double nominalSpeed = 0.95;
+    public static double angleMotorPowerCap = 0.9;
     public static double maxAngleOffset = 18;
 
     public static double spinyMotorCurrentCap = 3300;
     public static double angleMotorCalibrationCurrentCap = 1200;
 
     public static INTAKE_ANGLE currentState = INTAKE_ANGLE.DOWN;
-    public static MOTOR_MODE currentMode = MOTOR_MODE.HOLD_POSITION;
 
     private double targetAngle = 0;
     private double targetSpeed = 0;
-    private double targetSpinyPosition = 0;
     private double angleOffset = 0;
     private boolean goDown = false;
 
@@ -56,7 +48,6 @@ public class IntakeSubsystem extends SubsystemBase {
     private final LowPassFilter currentFilter = new LowPassFilter(0.7);
 
     private final PIDController anglePID = new PIDController(p, i, d);
-    private final PIDController holdPID = new PIDController(p_hold, i_hold, d_hold);
 
     RobotHardware robot;
     Telemetry telemetry;
@@ -116,8 +107,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void periodic(){
         anglePID.setPID(p, i, d);
-        holdPID.setPID(p_hold, i_hold, d_hold);
-
         double currentAngle = getAngleDegrees(robot.encoder_intake_Angle.getPosition());
 
         if (goDown){
@@ -142,41 +131,23 @@ public class IntakeSubsystem extends SubsystemBase {
             anglePower = anglePID.calculate(currentAngle, targetAngle) + Math.sin(Math.toRadians(currentAngle)) * f;
         }
 
-        if (currentAngle <= angle_DOWN + errorMarin) {
-            if (targetAngle != angle_TRANSFER && targetAngle != angle_UP) anglePower = 0;
+        anglePower = clamp(anglePower, -angleMotorPowerCap, angleMotorPowerCap);
+
+        if (currentAngle <= angle_DOWN + errorMarin && targetAngle == angle_DOWN) {
+            anglePower = 0;
         }
 
         robot.intake_AngleMotor.setPower(anglePower);
-        double angleMotorVelocity = robot.encoder_intake_Angle.getVelocity();
-        double spinMotorFeedForward = angleMotorVelocity * f_spin;
-
-        switch (currentMode){
-            case SET_VELOCITY:
-                robot.intake_spinyMotor.setPower(spinMotorFeedForward + speedFilter.estimate(targetSpeed));
-                break;
-            case HOLD_POSITION:
-                double power = holdPID.calculate(robot.encoder_intake_Speed.getVelocity(), angleMotorVelocity);
-                robot.intake_spinyMotor.setPower(spinMotorFeedForward + power);
-                break;
-        }
+        robot.intake_spinyMotor.setPower(speedFilter.estimate(targetSpeed));
 
 
         telemetry.addData("intakeAnglePower: ", anglePower);
         telemetry.addData("intake angle: ", currentAngle);
         telemetry.addData("targetAngle: ", targetAngle);
         telemetry.addData("angleOffset: ", angleOffset);
-        telemetry.addData("intake angle Velocity: ", robot.encoder_intake_Speed.getVelocity());
-        telemetry.addData("intake speed Velocity: ", robot.encoder_intake_Speed.getVelocity());
     }
 
-    public void setMode(MOTOR_MODE mode){
-        currentMode = mode;
-    }
 
-    public void setMode(MOTOR_MODE mode, double velocity){
-        setMode(mode);
-        setSpeed(velocity);
-    }
 
     public void calibrateAngle() {
         while(robot.intake_AngleMotor.getCurrent() < angleMotorCalibrationCurrentCap){
@@ -188,7 +159,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public boolean overCurrentTriggered(double speed) {
         double current = robot.intake_spinyMotor.getCurrent();
-        telemetry.addData("spiny motor current: ", current);
         return currentFilter.estimate(current) > spinyMotorCurrentCap * Math.abs(speed);
     }
 
@@ -208,10 +178,5 @@ public class IntakeSubsystem extends SubsystemBase {
         HOLDING_BALL_INSIDE,
         HOLDING_BALL_OUTSIDE,
         FOLDED
-    }
-
-    public enum MOTOR_MODE {
-        HOLD_POSITION,
-        SET_VELOCITY
     }
 }

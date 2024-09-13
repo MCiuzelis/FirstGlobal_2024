@@ -16,13 +16,13 @@ public class LiftSubsystem extends SubsystemBase {
     public static double highPosition = 82.5;
     public static double lowPosition = 65;
     public static double midPosition = 74;
-    public static double transferPosition = 21;
+    public static double transferPosition = 25;
     public static double intakeBlockingPosition = 6;
     public static double initialPosition = 0;
 
     public static double left_servoHoldPos = 0.56;
-    public static double left_servoReleasePos = 0.29;
-    public static double left_servoIntakeBlockingPos = 0.9;
+    public static double left_servoReleasePos = 0.1;
+    public static double left_servoIntakeBlockingPos = 0.92;
     public static double right_servoHoldPos = 0.59;
     public static double right_servoReleasePos = 0;
     public static double right_servoIntakeBlockingPos = 0.685;
