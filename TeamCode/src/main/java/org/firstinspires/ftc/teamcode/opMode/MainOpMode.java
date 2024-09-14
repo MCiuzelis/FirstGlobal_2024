@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 @TeleOp(name = "MainTeleOP")
 
 public class MainOpMode extends TeleOpBase {
-    public static buttonSimulator currentButton = buttonSimulator.NONE;
+    //public static buttonSimulator currentButton = buttonSimulator.NONE;
 
     @Override
     public void Init() {
@@ -97,25 +97,25 @@ public class MainOpMode extends TeleOpBase {
 
 
 
-        if (currentButton.equals(buttonSimulator.DPAD_LEFT)){
-            currentButton = buttonSimulator.NONE;
-            CommandScheduler.getInstance().schedule(new swallowBall_Outside(lift, intake));
-        } else if (currentButton.equals(buttonSimulator.CROSS)){
-            currentButton = buttonSimulator.NONE;
-            CommandScheduler.getInstance().schedule(new setLiftState_LOW_MID_HIGH(intake, lift, setLiftState_LOW_MID_HIGH.STATE.LOW));
-        } else if (currentButton.equals(buttonSimulator.DPAD_RIGHT)) {
-            currentButton = buttonSimulator.NONE;
-            CommandScheduler.getInstance().schedule(new swallowBall_Inside(lift, intake));
-        } else if (currentButton.equals(buttonSimulator.DPAD_DOWN)) {
-            currentButton = buttonSimulator.NONE;
-            CommandScheduler.getInstance().schedule(new intakeBall(lift, intake, driver));
-        } else if (currentButton.equals(buttonSimulator.DPAD_UP)) {
-            currentButton = buttonSimulator.NONE;
-            CommandScheduler.getInstance().schedule(new kickBall(intake, lift));
-        } else if (currentButton.equals(buttonSimulator.SQUARE)) {
-            currentButton = buttonSimulator.NONE;
-            CommandScheduler.getInstance().schedule(new setLiftState_DOWN(intake, lift, driver));
-        }
+//        if (currentButton.equals(buttonSimulator.DPAD_LEFT)){
+//            currentButton = buttonSimulator.NONE;
+//            CommandScheduler.getInstance().schedule(new swallowBall_Outside(lift, intake));
+//        } else if (currentButton.equals(buttonSimulator.CROSS)){
+//            currentButton = buttonSimulator.NONE;
+//            CommandScheduler.getInstance().schedule(new setLiftState_LOW_MID_HIGH(intake, lift, setLiftState_LOW_MID_HIGH.STATE.LOW));
+//        } else if (currentButton.equals(buttonSimulator.DPAD_RIGHT)) {
+//            currentButton = buttonSimulator.NONE;
+//            CommandScheduler.getInstance().schedule(new swallowBall_Inside(lift, intake));
+//        } else if (currentButton.equals(buttonSimulator.DPAD_DOWN)) {
+//            currentButton = buttonSimulator.NONE;
+//            CommandScheduler.getInstance().schedule(new intakeBall(lift, intake, driver));
+//        } else if (currentButton.equals(buttonSimulator.DPAD_UP)) {
+//            currentButton = buttonSimulator.NONE;
+//            CommandScheduler.getInstance().schedule(new kickBall(intake, lift));
+//        } else if (currentButton.equals(buttonSimulator.SQUARE)) {
+//            currentButton = buttonSimulator.NONE;
+//            CommandScheduler.getInstance().schedule(new setLiftState_DOWN(intake, lift, driver));
+//        }
 
 
         CommandScheduler.getInstance().run();
