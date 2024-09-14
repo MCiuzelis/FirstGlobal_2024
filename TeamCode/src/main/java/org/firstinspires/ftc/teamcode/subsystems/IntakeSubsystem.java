@@ -20,9 +20,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public static double angle_DOWN = 9.5;
     public static double angleSlowDown = 22;
-    public static double angle_UP = 67;
+    public static double angle_UP = 62;
     public static double angle_TRANSFER = 165;
-    public static double angle_SPIN_OUT = 55;
+    public static double angle_SPIN_OUT = 58;
     public static double angle_HOLDING_BALL = 45;
     public static double angle_HOLDING_BALL_OUTSIDE = 50;
     public static double angle_FOLDED = 200;
@@ -32,7 +32,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public static double errorMarin = 1.5;
 
     public static double angleMotorPowerCap = 0.9;
-    public static double maxAngleOffset = 18;
+    public static double maxAngleOffset = 25;
 
     public static double spinyMotorCurrentCap = 3300;
     public static double angleMotorCalibrationCurrentCap = 1200;
@@ -58,38 +58,33 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void setAngle(INTAKE_ANGLE angle){
+        goDown = false;
         switch (angle){
             case DOWN:
                 goDown = true;
                 currentState = INTAKE_ANGLE.DOWN;
                 break;
             case UP:
-                goDown = false;
                 targetAngle = angle_UP;
                 currentState = INTAKE_ANGLE.UP;
                 break;
             case TRANSFER:
-                goDown = false;
                 targetAngle = angle_TRANSFER;
                 currentState = INTAKE_ANGLE.TRANSFER;
                 break;
             case HOLDING_BALL_INSIDE:
-                goDown = false;
                 targetAngle = angle_HOLDING_BALL;
                 currentState = INTAKE_ANGLE.HOLDING_BALL_INSIDE;
                 break;
             case HOLDING_BALL_OUTSIDE:
-                goDown = false;
                 targetAngle = angle_HOLDING_BALL_OUTSIDE;
                 currentState = INTAKE_ANGLE.HOLDING_BALL_INSIDE;
                 break;
             case SPIN_OUT:
-                goDown = false;
                 targetAngle = angle_SPIN_OUT;
                 currentState = INTAKE_ANGLE.UP;
                 break;
             case FOLDED:
-                goDown = false;
                 targetAngle = angle_FOLDED;
                 currentState = INTAKE_ANGLE.FOLDED;
                 break;
@@ -131,7 +126,7 @@ public class IntakeSubsystem extends SubsystemBase {
             anglePower = anglePID.calculate(currentAngle, targetAngle) + Math.sin(Math.toRadians(currentAngle)) * f;
         }
 
-        anglePower = clamp(anglePower, -angleMotorPowerCap, angleMotorPowerCap);
+        anglePower = clamp(anglePower, -0.6, angleMotorPowerCap);
 
         if (currentAngle <= angle_DOWN + errorMarin && targetAngle == angle_DOWN) {
             anglePower = 0;
@@ -155,6 +150,10 @@ public class IntakeSubsystem extends SubsystemBase {
         }
         robot.intake_AngleMotor.setPower(0);
         robot.encoder_intake_Angle.reset();
+    }
+
+    public boolean angleMotorStalling(){
+        return robot.intake_AngleMotor.getCurrent() > 3000;
     }
 
     public boolean overCurrentTriggered(double speed) {
