@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.ParallelRaceGroup;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
+
+import org.firstinspires.ftc.teamcode.commands.wrappers.emptyCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.rumbleCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setFrontServoState;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setIntakeAngleCommand;
@@ -39,10 +42,25 @@ public class intakeBall extends SequentialCommandGroup {
 
                                 new setIntakeSpeedCommand(intake, 0),
                                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
-                                new WaitCommand(150),
+                                new WaitCommand(400),
+
+                                new ConditionalCommand(
+                                            new SequentialCommandGroup(
+                                                    new rumbleCommand(gamepad, 100),
+                                                    new setIntakeSpeedCommand(intake, -1),
+                                                    new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
+                                                    new WaitCommand(1000),
+                                                    new setIntakeSpeedCommand(intake, 0),
+                                                    new WaitCommand(500),
+                                                    new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
+                                                    new WaitCommand(500)
+                                        ),
+                                        new emptyCommand(),
+                                        intake::angleMotorStalling
+                                ),
 
                                 new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
-                                new WaitCommand(500),
+                                new WaitCommand(1000),
                                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN)
                         ),
                         lift::isLiftUP

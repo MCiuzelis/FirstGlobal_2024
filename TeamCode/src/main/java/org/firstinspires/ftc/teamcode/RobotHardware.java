@@ -24,7 +24,6 @@ public class RobotHardware {
     public BetterMotor frontLeft, frontRight, backLeft, backRight, liftMotor_Left, liftMotor_Right, intake_AngleMotor, intake_spinyMotor;
     public BetterEncoder encoder_liftPosition, encoder_intake_Angle, encoder_intake_Speed;
     public BetterServo releaseServoLeft, releaseServoRight, topServoLeft, topServoRight;
-    //public BetterSensor distanceSensor, spinyCurrentSensor;
     public RevColorSensorV3 colorSensor;
 
     public RobotHardware(HardwareMap hw){
@@ -55,22 +54,13 @@ public class RobotHardware {
         encoder_intake_Angle = new BetterEncoder(controlHub, 0, 288d * 40 / 15);
         encoder_intake_Angle.setDirection(Direction.REVERSE);
 
-//        encoder_driveBaseLeft = new CuttleEncoder(controlHub, 1, 28d * 84 / 29 * 76 / 21);
-//        encoder_driveBaseLeft.setDirection(Direction.FORWARD);
-//        encoder_driveBaseRight = new CuttleEncoder(controlHub, 2, 28d * 84 / 29 * 76 / 21);
-//        encoder_driveBaseRight.setDirection(Direction.FORWARD);
-
         releaseServoLeft = new BetterServo(controlHub, 0, BetterServo.Direction.FORWARD);
         releaseServoRight = new BetterServo(controlHub, 1, BetterServo.Direction.REVERSE);
 
         topServoLeft = new BetterServo(controlHub, 2, BetterServo.Direction.FORWARD);
         topServoRight = new BetterServo(controlHub, 3, BetterServo.Direction.REVERSE);
 
-        //distanceSensor = new DistanceSensor(hw, "distanceSensor");
-        //distanceSensor = new BetterSensor(new RevColorSensorV3Provider(hw, "colorSensor"));
-        //spinyCurrentSensor = new BetterSensor(new CoreHexMotorCurrentProvider(intake_spinyMotor));
         colorSensor = hw.get(RevColorSensorV3.class, "colorSensor");
-        //ballIntakeSensor = hw.get(RevColorSensorV3.class, "intakeColorSensor");
     }
 
     public void setLeftPower(double power){
