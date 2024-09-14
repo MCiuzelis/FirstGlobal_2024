@@ -40,9 +40,9 @@ public class intakeBall extends SequentialCommandGroup {
                                         new WaitCommand(5000)
                                 ),
 
-                                new setIntakeSpeedCommand(intake, 0),
                                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
-                                new WaitCommand(400),
+                                new WaitCommand(100),
+                                new setIntakeSpeedCommand(intake, 0),
 
                                 new ConditionalCommand(
                                             new SequentialCommandGroup(
@@ -60,10 +60,10 @@ public class intakeBall extends SequentialCommandGroup {
                                 ),
 
                                 new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
-                                new WaitCommand(1000),
+                                new WaitCommand(600),
                                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN)
                         ),
-                        lift::isLiftUP
+                        ()-> (lift.isLiftUP() || lift.isBallPresent(10))
                 )
         );
         addRequirements(lift, intake);
