@@ -12,13 +12,11 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 
 @Config
 public class LiftSubsystem extends SubsystemBase {
-
     public static double highPosition = 82.5;
     public static double lowPosition = 65;
     public static double midPosition = 74;
-    public static double transferPosition = 25;
     public static double intakeBlockingPosition = 6;
-    public static double initialPosition = 0;
+    public static double initialPosition = 0.65;
 
     public static double left_servoHoldPos = 0.56;
     public static double left_servoReleasePos = 0.1;
@@ -62,7 +60,7 @@ public class LiftSubsystem extends SubsystemBase {
         double power = controller.calculate(currentPosition, targetPosition);
         telemetry.addData("lift target position: ", targetPosition);
         telemetry.addData("current lift position: ", currentPosition);
-        power = clamp(power, -0.75, 1);
+        power = clamp(power, -0.85, 1);
         robot.setLiftPower(power);
     }
 
@@ -74,9 +72,6 @@ public class LiftSubsystem extends SubsystemBase {
             case DOWN:
             case BLOCKING_INTAKE:
                 targetPosition = intakeBlockingPosition;
-                break;
-            case TRANSFER:
-                targetPosition = transferPosition;
                 break;
             case LOW:
                 targetPosition = lowPosition;
@@ -144,14 +139,6 @@ public class LiftSubsystem extends SubsystemBase {
         return robot.releaseServoLeft.getPosition() == left_servoHoldPos;
     }
 
-    public boolean isLiftAboveTransferPos(){
-        return robot.encoder_liftPosition.getPosition() > transferPosition + errorMargin;
-    }
-
-    public boolean isLiftCloseToTransferPos(){
-        return robot.encoder_liftPosition.getPosition() < transferPosition + 9;
-    }
-
     public boolean isLiftHighEnoughToFoldIntake(){
         return robot.encoder_liftPosition.getPosition() > 40;
     }
@@ -172,11 +159,6 @@ public class LiftSubsystem extends SubsystemBase {
         }
     }
 
-    public void offsetTarget(double offset){
-        targetPosition += offset;
-        targetPosition = clamp(targetPosition, lowPosition, highPosition);
-    }
-
     public double getHeight(){
         return robot.encoder_liftPosition.getPosition() / highPosition;
     }
@@ -190,7 +172,6 @@ public class LiftSubsystem extends SubsystemBase {
         INITIAL,
         BLOCKING_INTAKE,
         DOWN,
-        TRANSFER,
         LOW,
         MID,
         HIGH,

@@ -30,7 +30,7 @@ public class setLiftState_DOWN extends SequentialCommandGroup {
 
                                 new ConditionalCommand(
                                         new transferBall(intake, lift),
-                                        new emptyCommand(),
+                                        new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN),
                                         ()-> lift.getBallState().equals(LiftSubsystem.BALL_STATE.IN_TRANSFER))
                         ),
                         new SequentialCommandGroup(

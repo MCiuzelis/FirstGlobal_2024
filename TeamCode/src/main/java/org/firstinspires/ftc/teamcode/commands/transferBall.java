@@ -18,7 +18,6 @@ public class transferBall extends SequentialCommandGroup {
         addCommands(
                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
 
-
                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.INITIAL),
                 new WaitUntilCommand(lift::liftReachedPosition),
                 new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.RELEASE),
@@ -27,13 +26,17 @@ public class transferBall extends SequentialCommandGroup {
 
                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
                 new setIntakeSpeedCommand(intake, -1),
-                new WaitCommand(900),
+                new WaitCommand(100),
+                new WaitUntilCommand(()-> lift.isBallPresent(LiftSubsystem.LIFT_POSITION.BLOCKING_INTAKE)),
+
 
                 new setIntakeSpeedCommand(intake, 0),
-                new WaitCommand(50),
+                new WaitCommand(100),
 
                 new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
                 new InstantCommand(()-> lift.setBallState(LiftSubsystem.BALL_STATE.NOT_IN_TRANSFER)),
+
+                new WaitCommand(400),
 
                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.LOW),
 
