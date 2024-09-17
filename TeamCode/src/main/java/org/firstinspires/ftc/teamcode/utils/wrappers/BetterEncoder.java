@@ -15,6 +15,9 @@ public class BetterEncoder extends CuttleEncoder {
         offset = super.getRotation();
     }
 
+    public void resetToNewPosition(double currentPosition) {
+        offset = super.getRotation() - currentPosition;
+    }
 
     public void updatePosition(){
         position = super.getRotation() - offset;

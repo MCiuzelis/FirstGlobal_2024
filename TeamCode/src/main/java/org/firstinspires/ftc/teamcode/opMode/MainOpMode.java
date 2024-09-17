@@ -14,11 +14,14 @@ import org.firstinspires.ftc.teamcode.commands.setLiftState_LOW_MID_HIGH;
 import org.firstinspires.ftc.teamcode.commands.swallowBall_Inside;
 import org.firstinspires.ftc.teamcode.commands.swallowBall_Outside;
 import org.firstinspires.ftc.teamcode.commands.wrappers.emptyCommand;
+import org.firstinspires.ftc.teamcode.commands.wrappers.overrideLiftPower;
+import org.firstinspires.ftc.teamcode.commands.wrappers.resetLiftEncoder;
 import org.firstinspires.ftc.teamcode.commands.wrappers.rumbleCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setFrontServoState;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setIntakeAngleCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setIntakeSpeedCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setLiftHeightCommand;
+import org.firstinspires.ftc.teamcode.commands.wrappers.setTopServoState;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
@@ -27,17 +30,17 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 @TeleOp(name = "MainTeleOP")
 
 public class MainOpMode extends TeleOpBase {
-    //public static buttonSimulator currentButton = buttonSimulator.NONE;
-
     @Override
     public void Init() {
         lift.update(LiftSubsystem.BUCKET_SERVO_POSITION.HOLD);
         intake.calibrateAngle();
 
-        //driver gamepad commands:
+        //MAIN DRIVER COMMANDS:
         driver.getGamepadButton(driver.square)
-                .whenPressed(()-> schedule(new setLiftState_DOWN(intake, lift, driver)
-                ));
+                .toggleWhenPressed(()-> schedule(new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.RELEASE)),
+                                   ()-> schedule(new setLiftState_DOWN(intake, lift, driver))
+
+                );
         driver.getGamepadButton(driver.cross)
                 .whenPressed(()-> schedule(new setLiftState_LOW_MID_HIGH(intake, lift, setLiftState_LOW_MID_HIGH.STATE.LOW)
                 ));
@@ -78,6 +81,51 @@ public class MainOpMode extends TeleOpBase {
                         new WaitCommand(700),
                         new InstantCommand(()-> intake.calibrateAngle())
                 )));
+        driver.getGamepadButton(driver.M2)
+                .toggleWhenPressed(()-> schedule(new setTopServoState(lift, LiftSubsystem.TOP_SERVO_POSITION.HOLD)),
+                                   ()-> schedule(new setTopServoState(lift, LiftSubsystem.TOP_SERVO_POSITION.FOLDED)
+                ));
+
+
+
+        //SECOND DRIVER OVERRIDES
+        assistant.getGamepadButton(assistant.triangle)
+                .whenPressed(()-> schedule(new resetLiftEncoder(lift, LiftSubsystem.highPosition))
+                );
+        assistant.getGamepadButton(assistant.square)
+                .whenPressed(()-> schedule(new resetLiftEncoder(lift, LiftSubsystem.intakeBlockingPosition))
+                );
+        assistant.getGamepadButton(assistant.cross)
+                .whenPressed(()-> schedule(new resetLiftEncoder(lift, LiftSubsystem.initialPosition))
+                );
+        assistant.getGamepadButton(assistant.dpadUp)
+                .whileHeld(()-> schedule(new overrideLiftPower(lift, 0.6)))
+                .whenReleased(()-> schedule(new overrideLiftPower(lift, 0))
+                );
+        assistant.getGamepadButton(assistant.dpadDown)
+                .whileHeld(()-> schedule(new overrideLiftPower(lift, -0.6)))
+                .whenReleased(()-> schedule(new overrideLiftPower(lift, 0))
+                );
+        assistant.getGamepadButton(assistant.dpadLeft)
+                .whenPressed(()-> schedule(new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP))
+                );
+        assistant.getGamepadButton(assistant.dpadRight)
+                .whenPressed(()-> schedule(new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN))
+                );
+        assistant.getGamepadButton(assistant.leftBumper)
+                .whileHeld(()-> schedule(new setIntakeSpeedCommand(intake, 0.5)))
+                .whenReleased(()-> schedule(new setIntakeSpeedCommand(intake, 0))
+                );
+        assistant.getGamepadButton(assistant.rightBumper)
+                .whileHeld(()-> schedule(new setIntakeSpeedCommand(intake, -0.5)))
+                .whenReleased(()-> schedule(new setIntakeSpeedCommand(intake, 0))
+                );
+        assistant.getGamepadButton(assistant.M1)
+                .whenPressed(()-> schedule(new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.RELEASE))
+                );
+        assistant.getGamepadButton(assistant.M2)
+                .whenPressed(()-> schedule(new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD))
+                );
     }
 
     @Override
@@ -95,29 +143,6 @@ public class MainOpMode extends TeleOpBase {
         robot.encoder_intake_Angle.updatePosition();
         intake.setAngleOffset(driver.leftTrigger());
 
-
-
-//        if (currentButton.equals(buttonSimulator.DPAD_LEFT)){
-//            currentButton = buttonSimulator.NONE;
-//            CommandScheduler.getInstance().schedule(new swallowBall_Outside(lift, intake));
-//        } else if (currentButton.equals(buttonSimulator.CROSS)){
-//            currentButton = buttonSimulator.NONE;
-//            CommandScheduler.getInstance().schedule(new setLiftState_LOW_MID_HIGH(intake, lift, setLiftState_LOW_MID_HIGH.STATE.LOW));
-//        } else if (currentButton.equals(buttonSimulator.DPAD_RIGHT)) {
-//            currentButton = buttonSimulator.NONE;
-//            CommandScheduler.getInstance().schedule(new swallowBall_Inside(lift, intake));
-//        } else if (currentButton.equals(buttonSimulator.DPAD_DOWN)) {
-//            currentButton = buttonSimulator.NONE;
-//            CommandScheduler.getInstance().schedule(new intakeBall(lift, intake, driver));
-//        } else if (currentButton.equals(buttonSimulator.DPAD_UP)) {
-//            currentButton = buttonSimulator.NONE;
-//            CommandScheduler.getInstance().schedule(new kickBall(intake, lift));
-//        } else if (currentButton.equals(buttonSimulator.SQUARE)) {
-//            currentButton = buttonSimulator.NONE;
-//            CommandScheduler.getInstance().schedule(new setLiftState_DOWN(intake, lift, driver));
-//        }
-
-
         CommandScheduler.getInstance().run();
 
         double driveMultiplier = 1;
@@ -126,15 +151,5 @@ public class MainOpMode extends TeleOpBase {
         }
 
         tank.loop(driver.getGamepadInput(driveMultiplier, driveMultiplier));
-    }
-
-    private enum buttonSimulator{
-        DPAD_LEFT,
-        DPAD_RIGHT,
-        DPAD_UP,
-        DPAD_DOWN,
-        CROSS,
-        SQUARE,
-        NONE
     }
 }

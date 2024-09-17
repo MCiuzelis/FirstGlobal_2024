@@ -18,8 +18,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public static double d = 0.002;
     public static double f = 0.48;
 
+    public static double slowDownDistance = 15;
+
     public static double angle_DOWN = 9.5;
-    public static double angleSlowDown = 22;
     public static double angle_UP = 62;
     public static double angle_TRANSFER = 165;
     public static double angle_SPIN_OUT = 58;
@@ -104,9 +105,17 @@ public class IntakeSubsystem extends SubsystemBase {
         anglePID.setPID(p, i, d);
         double currentAngle = getAngleDegrees(robot.encoder_intake_Angle.getPosition());
 
+        double error = targetAngle - currentAngle;
+        double setPoint = targetAngle;
+
+        if (Math.abs(error) < slowDownDistance){
+            setPoint = currentAngle + error;
+        }
+
+
         if (goDown){
             if (currentAngle > angle_DOWN){
-                if (currentAngle > angleSlowDown) {
+                if (currentAngle > slowDownDistance) {
                     targetAngle -= slowDownSpeed_fast;
                 }
                 else{
@@ -114,9 +123,6 @@ public class IntakeSubsystem extends SubsystemBase {
                 }
             }
         }
-
-        if (currentAngle <= angle_DOWN + errorMarin) goDown = false;
-        targetAngle = clamp(targetAngle, angle_DOWN, angle_FOLDED);
 
         double anglePower;
         if (currentState != INTAKE_ANGLE.HOLDING_BALL_INSIDE && currentState != INTAKE_ANGLE.HOLDING_BALL_OUTSIDE) {

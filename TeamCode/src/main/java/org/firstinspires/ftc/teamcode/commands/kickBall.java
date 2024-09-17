@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 public class kickBall extends SequentialCommandGroup {
     public kickBall(IntakeSubsystem intake, LiftSubsystem lift){
         addCommands(
-                new ConditionalCommand(
                         new SequentialCommandGroup(
                                 //IF HOLDING BALL
                                 new ConditionalCommand(
@@ -35,22 +34,7 @@ public class kickBall extends SequentialCommandGroup {
                                         ),
                                         ()-> intake.getCurrentState().equals(IntakeSubsystem.INTAKE_ANGLE.HOLDING_BALL_INSIDE)
                                 )
-
-
-                        ),
-                        new SequentialCommandGroup(
-                                new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
-                                new setIntakeSpeedCommand(intake, 0.85),
-
-                                new WaitCommand(300),
-
-                                new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
-                                new setIntakeSpeedCommand(intake, 0),
-                                new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD)
-                        ),
-                        ()-> intake.getCurrentState().equals(IntakeSubsystem.INTAKE_ANGLE.HOLDING_BALL_INSIDE) ||
-                             intake.getCurrentState().equals(IntakeSubsystem.INTAKE_ANGLE.HOLDING_BALL_OUTSIDE)
-                )
+                        )
         );
         addRequirements(intake, lift);
     }

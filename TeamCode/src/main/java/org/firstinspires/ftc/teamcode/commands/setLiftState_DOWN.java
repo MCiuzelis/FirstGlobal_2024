@@ -18,20 +18,20 @@ public class setLiftState_DOWN extends SequentialCommandGroup {
                 new ConditionalCommand(
                         new SequentialCommandGroup(
                                 //if lift already up
-                                new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.RELEASE),
-                                new WaitCommand(1200),
+                                //new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.RELEASE),
+                                //new WaitCommand(1200),
                                 new rumbleCommand(driver, 100),
-                                new WaitCommand(400),
+                                //new WaitCommand(400),
 
-                                new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.LOW),
-                                new WaitCommand(50),
+
 
                                 new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
 
                                 new ConditionalCommand(
                                         new transferBall(intake, lift),
                                         new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN),
-                                        ()-> lift.getBallState().equals(LiftSubsystem.BALL_STATE.IN_TRANSFER))
+                                        ()-> lift.getBallState().equals(LiftSubsystem.BALL_STATE.IN_TRANSFER)
+                                )
                         ),
                         new SequentialCommandGroup(
                                 //lift down or in the middle of travel

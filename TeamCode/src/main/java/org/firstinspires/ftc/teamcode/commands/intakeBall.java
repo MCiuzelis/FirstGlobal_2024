@@ -60,7 +60,7 @@ public class intakeBall extends SequentialCommandGroup {
                                 ),
 
                                 new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
-                                new WaitCommand(600),
+                                new WaitCommand(1100),
                                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN)
                         ),
                         ()-> (lift.isLiftUP() || lift.isBallPresent(10))

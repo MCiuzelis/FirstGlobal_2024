@@ -12,28 +12,27 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 
 @Config
 public class LiftSubsystem extends SubsystemBase {
-    public static double highPosition = 82.5;
+    public static double highPosition = 83.15;
     public static double lowPosition = 65;
     public static double midPosition = 74;
     public static double intakeBlockingPosition = 6;
     public static double initialPosition = 0.65;
 
-    public static double left_servoHoldPos = 0.56;
+    public static double left_servoHoldPos = 0.61;
     public static double left_servoReleasePos = 0.1;
     public static double left_servoIntakeBlockingPos = 0.92;
-    public static double right_servoHoldPos = 0.59;
+    public static double right_servoHoldPos = 0.65;
     public static double right_servoReleasePos = 0;
     public static double right_servoIntakeBlockingPos = 0.685;
 
     public static double topServoHoldPos = 0;
-    public static double topServoReleasePos = 0;
-    public static double topServoBlockingPos = 0;
-    public static double topServoFoldedPos = 0;
+    public static double topServoReleasePos = 0.125;
+    public static double topServoFoldedPos = 1;
 
     public static double errorMargin = 0.5;
 
-    public static double distanceTargetWhenDown = 5;
-    public static double distanceTargetWhenBlockingIntake = 5;
+    public static double distanceTargetWhenDown = 7;
+    public static double distanceTargetWhenBlockingIntake = 7;
 
     public BALL_STATE currentBallState = BALL_STATE.NOT_IN_TRANSFER;
 
@@ -44,6 +43,7 @@ public class LiftSubsystem extends SubsystemBase {
 
     private double targetPosition = 0;
     private final PIDFController controller = new PIDFController(p, i, d, f);
+    private double powerOverride = 0;
 
     RobotHardware robot;
     Telemetry telemetry;
@@ -61,6 +61,8 @@ public class LiftSubsystem extends SubsystemBase {
         telemetry.addData("lift target position: ", targetPosition);
         telemetry.addData("current lift position: ", currentPosition);
         power = clamp(power, -0.85, 1);
+
+        if (powerOverride != 0) power = powerOverride;
         robot.setLiftPower(power);
     }
 
@@ -112,15 +114,15 @@ public class LiftSubsystem extends SubsystemBase {
                 robot.topServoLeft.setPosition(topServoHoldPos);
                 robot.topServoRight.setPosition(topServoHoldPos);
                 break;
-            case BLOCKING:
-                robot.topServoLeft.setPosition(topServoBlockingPos);
-                robot.topServoRight.setPosition(topServoBlockingPos);
-                break;
             case FOLDED:
                 robot.topServoLeft.setPosition(topServoFoldedPos);
                 robot.topServoRight.setPosition(topServoFoldedPos);
                 break;
         }
+    }
+
+    public void overrideLiftPower(double power){
+        powerOverride = power;
     }
 
     public void setBallState(BALL_STATE state){
@@ -141,6 +143,10 @@ public class LiftSubsystem extends SubsystemBase {
 
     public boolean isLiftHighEnoughToFoldIntake(){
         return robot.encoder_liftPosition.getPosition() > 40;
+    }
+
+    public void resetLiftEncoder(double currentPosition){
+        robot.encoder_liftPosition.resetToNewPosition(currentPosition);
     }
 
     public boolean isLiftUP(){
@@ -190,7 +196,6 @@ public class LiftSubsystem extends SubsystemBase {
     public enum TOP_SERVO_POSITION {
         HOLD,
         RELEASE,
-        BLOCKING,
         FOLDED
     }
 
