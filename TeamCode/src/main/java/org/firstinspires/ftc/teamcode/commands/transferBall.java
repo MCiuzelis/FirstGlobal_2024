@@ -16,6 +16,8 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 public class transferBall extends SequentialCommandGroup {
     public transferBall(IntakeSubsystem intake, LiftSubsystem lift){
         addCommands(
+                new InstantCommand(()-> lift.setBallState(LiftSubsystem.BALL_STATE.NOT_IN_TRANSFER)),
+
                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
 
                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.INITIAL),
@@ -34,7 +36,6 @@ public class transferBall extends SequentialCommandGroup {
                 new WaitCommand(100),
 
                 new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
-                new InstantCommand(()-> lift.setBallState(LiftSubsystem.BALL_STATE.NOT_IN_TRANSFER)),
 
                 new WaitCommand(400),
 
@@ -43,7 +44,10 @@ public class transferBall extends SequentialCommandGroup {
 
                 new setTopServoState(lift, LiftSubsystem.TOP_SERVO_POSITION.RELEASE),
                 new WaitCommand(50),
-                new setTopServoState(lift, LiftSubsystem.TOP_SERVO_POSITION.FOLDED)
+                new setTopServoState(lift, LiftSubsystem.TOP_SERVO_POSITION.FOLDED),
+
+                new WaitCommand(100),
+                new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.LOW)
         );
         addRequirements(lift, intake);
     }
