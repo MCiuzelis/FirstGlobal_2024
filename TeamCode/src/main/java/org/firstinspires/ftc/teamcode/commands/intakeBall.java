@@ -33,7 +33,7 @@ public class intakeBall extends SequentialCommandGroup {
                                 new WaitCommand(100),
 
                                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
-                                new setIntakeSpeedCommand(intake, 0.85),
+                                new setIntakeSpeedCommand(intake, 0.6),
 
                                 new ParallelRaceGroup(
                                         new WaitUntilCommand(()-> lift.isBallPresent(LiftSubsystem.LIFT_POSITION.BLOCKING_INTAKE)),
@@ -41,7 +41,7 @@ public class intakeBall extends SequentialCommandGroup {
                                 ),
 
                                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
-                                new WaitCommand(100),
+                                new WaitCommand(300),
                                 new setIntakeSpeedCommand(intake, 0),
 
                                 new ConditionalCommand(
