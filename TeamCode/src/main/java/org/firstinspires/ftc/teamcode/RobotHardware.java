@@ -46,7 +46,7 @@ public class RobotHardware {
 
         liftMotor_Left = initMotor(expansionHub, 0, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor_Right = initMotor(expansionHub, 1, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
-        intake_AngleMotor = initMotor(expansionHub, 3, Direction.REVERSE, DcMotor.ZeroPowerBehavior.FLOAT);
+        intake_AngleMotor = initMotor(expansionHub, 3, Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
         intake_spinyMotor = initMotor(expansionHub, 2, Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
 
         encoder_liftPosition = new BetterEncoder(controlHub, 3, 530.05128205128);
