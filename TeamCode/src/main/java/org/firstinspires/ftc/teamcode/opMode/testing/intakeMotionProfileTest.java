@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.opMode.TeleOpBase;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.utils.MotionProfile;
 
-//@Disabled
+@Disabled
 @Config
 @Photon
 @TeleOp(name = "motionProfileTest")

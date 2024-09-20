@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 
 @Config
 public class LiftSubsystem extends SubsystemBase {
-    public static double highPosition = 83.15;
+    public static double highPosition = 83.4;
     public static double lowPosition = 65;
     public static double midPosition = 74;
     public static double intakeBlockingPosition = 6;

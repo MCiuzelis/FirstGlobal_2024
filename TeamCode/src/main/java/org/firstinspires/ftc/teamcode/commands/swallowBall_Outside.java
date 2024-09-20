@@ -16,7 +16,7 @@ public class swallowBall_Outside extends SequentialCommandGroup {
                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
                 new WaitCommand(100),
                 new setIntakeSpeedCommand(intake, -0.7),
-                new WaitUntilCommand(()-> intake.overCurrentTriggered(0.6)),
+                new WaitUntilCommand(()-> intake.overCurrentTriggered(0.49)),
                 new setIntakeSpeedCommand(intake, -0.4),
 
                 new WaitCommand(200),

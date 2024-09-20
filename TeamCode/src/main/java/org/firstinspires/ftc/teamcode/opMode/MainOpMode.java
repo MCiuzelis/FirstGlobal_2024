@@ -93,7 +93,7 @@ public class MainOpMode extends TeleOpBase {
 
         jerkCommand jerkCommandInstance = new jerkCommand(lift);
         driver.getGamepadButton(driver.rightBumper)
-                .whileHeld(() -> CommandScheduler.getInstance().schedule(jerkCommandInstance))
+                .whenPressed(() -> CommandScheduler.getInstance().schedule(jerkCommandInstance))
                 .whenReleased(() -> {
                     CommandScheduler.getInstance().cancel(jerkCommandInstance);
                     schedule(new overrideLiftPower(lift, 0));

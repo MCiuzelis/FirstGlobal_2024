@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import static java.lang.Thread.sleep;
-
 import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.LowPassFilter;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.controller.PIDController;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.utils.MotionProfile;
@@ -120,7 +117,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean angleMotorStalling(){
-        return robot.intake_AngleMotor.getCurrent() > 3000;
+        return robot.intake_AngleMotor.getCurrent() > 5000;
     }
 
     public boolean intakeNotFolded(){

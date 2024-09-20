@@ -31,7 +31,7 @@ public class transferBall extends SequentialCommandGroup {
 
                 new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
                 new setIntakeSpeedCommand(intake, -1),
-                new WaitCommand(100),
+                new WaitCommand(250),
 
                 new ParallelRaceGroup(
                     new WaitUntilCommand(()-> lift.isBallPresent(LiftSubsystem.LIFT_POSITION.BLOCKING_INTAKE)),
