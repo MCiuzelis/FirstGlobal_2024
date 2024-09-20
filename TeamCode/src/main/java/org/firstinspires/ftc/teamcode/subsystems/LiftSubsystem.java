@@ -31,8 +31,8 @@ public class LiftSubsystem extends SubsystemBase {
 
     public static double errorMargin = 0.5;
 
-    public static double distanceTargetWhenDown = 7;
-    public static double distanceTargetWhenBlockingIntake = 7;
+    public static double distanceTargetWhenDown = 9;
+    public static double distanceTargetWhenBlockingIntake = 9;
 
     public BALL_STATE currentBallState = BALL_STATE.NOT_IN_TRANSFER;
 
@@ -135,6 +135,15 @@ public class LiftSubsystem extends SubsystemBase {
 
     public boolean liftReachedPosition(){
         return robot.encoder_liftPosition.getPosition() > targetPosition - errorMargin && robot.encoder_liftPosition.getPosition() < targetPosition + errorMargin;
+    }
+
+    public void invertTopServoState(){
+        if (robot.topServoLeft.getPosition() == topServoFoldedPos){
+            update(BUCKET_SERVO_POSITION.HOLD);
+        }
+        else{
+            update(TOP_SERVO_POSITION.FOLDED);
+        }
     }
 
     public boolean areServosExtended(){
