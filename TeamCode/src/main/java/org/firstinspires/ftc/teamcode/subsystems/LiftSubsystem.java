@@ -174,6 +174,10 @@ public class LiftSubsystem extends SubsystemBase {
         }
     }
 
+    public boolean isBallPresent(double distance){
+        return robot.colorSensor.getDistance(DistanceUnit.CM) < distance;
+    }
+
     public double getHeight(){
         return robot.encoder_liftPosition.getPosition() / highPosition;
     }

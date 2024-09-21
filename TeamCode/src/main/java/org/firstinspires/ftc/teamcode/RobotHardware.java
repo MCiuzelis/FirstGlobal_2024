@@ -54,8 +54,8 @@ public class RobotHardware {
         encoder_intake_Angle = new BetterEncoder(controlHub, 0, 288d * 40 / 15);
         encoder_intake_Angle.setDirection(Direction.REVERSE);
 
-        releaseServoLeft = new BetterServo(controlHub, 0, BetterServo.Direction.FORWARD);
-        releaseServoRight = new BetterServo(controlHub, 1, BetterServo.Direction.REVERSE);
+        releaseServoLeft = new BetterServo(controlHub, 1, BetterServo.Direction.FORWARD);
+        releaseServoRight = new BetterServo(controlHub, 0, BetterServo.Direction.REVERSE);
 
         topServoLeft = new BetterServo(controlHub, 2, BetterServo.Direction.FORWARD);
         topServoRight = new BetterServo(controlHub, 3, BetterServo.Direction.REVERSE);
