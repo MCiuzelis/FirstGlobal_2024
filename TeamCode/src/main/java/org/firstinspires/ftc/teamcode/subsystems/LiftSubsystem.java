@@ -62,7 +62,10 @@ public class LiftSubsystem extends SubsystemBase {
         telemetry.addData("current lift position: ", currentPosition);
         power = clamp(power, -0.85, 1);
 
-        if (powerOverride != 0) power = powerOverride;
+        if (powerOverride != 0){
+            power = powerOverride;
+            targetPosition = currentPosition;
+        }
         robot.setLiftPower(power);
     }
 
@@ -156,6 +159,10 @@ public class LiftSubsystem extends SubsystemBase {
 
     public void resetLiftEncoder(double currentPosition){
         robot.encoder_liftPosition.resetToNewPosition(currentPosition);
+    }
+
+    public void overrideTargetPosition(){
+        targetPosition = robot.encoder_liftPosition.getPosition();
     }
 
     public boolean isLiftUP(){

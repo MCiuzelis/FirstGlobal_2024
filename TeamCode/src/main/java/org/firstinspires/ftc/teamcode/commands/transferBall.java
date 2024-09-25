@@ -13,9 +13,10 @@ import org.firstinspires.ftc.teamcode.commands.wrappers.setLiftHeightCommand;
 import org.firstinspires.ftc.teamcode.commands.wrappers.setTopServoState;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.utils.wrappers.BetterGamepad;
 
 public class transferBall extends SequentialCommandGroup {
-    public transferBall(IntakeSubsystem intake, LiftSubsystem lift){
+    public transferBall(IntakeSubsystem intake, LiftSubsystem lift, BetterGamepad driver){
         addCommands(
                 new InstantCommand(()-> lift.setBallState(LiftSubsystem.BALL_STATE.NOT_IN_TRANSFER)),
 
@@ -33,9 +34,14 @@ public class transferBall extends SequentialCommandGroup {
                 new setIntakeSpeedCommand(intake, -1),
                 new WaitCommand(250),
 
+//                new ParallelRaceGroup(
+//                    new WaitUntilCommand(()-> lift.isBallPresent(LiftSubsystem.LIFT_POSITION.BLOCKING_INTAKE)),
+//                    new WaitCommand(4000)
+//                ),
+
                 new ParallelRaceGroup(
-                    new WaitUntilCommand(()-> lift.isBallPresent(LiftSubsystem.LIFT_POSITION.BLOCKING_INTAKE)),
-                    new WaitCommand(4000)
+                        new WaitUntilCommand(()-> lift.isBallPresent(LiftSubsystem.LIFT_POSITION.BLOCKING_INTAKE)),
+                        new WaitUntilCommand(()-> driver.getGamepadButton(driver.share).get())
                 ),
 
 
@@ -47,7 +53,6 @@ public class transferBall extends SequentialCommandGroup {
                 new WaitCommand(400),
 
                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.LOW),
-
 
                 new setTopServoState(lift, LiftSubsystem.TOP_SERVO_POSITION.RELEASE),
                 new WaitCommand(50),

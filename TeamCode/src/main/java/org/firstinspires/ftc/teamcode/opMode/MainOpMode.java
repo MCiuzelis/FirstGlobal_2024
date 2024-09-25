@@ -5,10 +5,9 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.commands.intakeBall;
 import org.firstinspires.ftc.teamcode.commands.depositBall;
 import org.firstinspires.ftc.teamcode.commands.jerkCommand;
@@ -99,6 +98,26 @@ public class MainOpMode extends TeleOpBase {
                     schedule(new overrideLiftPower(lift, 0));
         });
 
+        //E-STOP-----USE WITH CAUTION IF EVERYTHING ELSE FAILS (IF BALL GETS JAMMED IN TRANSFER)
+        driver.getGamepadButton(driver.options)
+                .toggleWhenPressed(()-> {
+                            CommandScheduler.getInstance().cancelAll();
+                            schedule(new SequentialCommandGroup(
+                                    new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.INITIAL),
+                                    new WaitUntilCommand(lift::liftReachedPosition),
+                                    new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.RELEASE),
+                                    new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP),
+                                    new WaitCommand(150),
+                                    new setIntakeSpeedCommand(intake, -1)
+                            ));
+                        },
+                        ()-> schedule(new SequentialCommandGroup(
+                                new setIntakeSpeedCommand(intake, 0),
+                                new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
+                                new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
+                                new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN)
+                        )));
+
 
 
 
@@ -113,12 +132,22 @@ public class MainOpMode extends TeleOpBase {
                 .whenPressed(()-> schedule(new resetLiftEncoder(lift, LiftSubsystem.initialPosition))
                 );
         assistant.getGamepadButton(assistant.dpadUp)
-                .whileHeld(()-> schedule(new overrideLiftPower(lift, 0.6)))
-                .whenReleased(()-> schedule(new overrideLiftPower(lift, 0))
+                .whileHeld(()-> schedule(new SequentialCommandGroup(
+                        new overrideLiftPower(lift, 0.6),
+                        new InstantCommand(lift::overrideTargetPosition))))
+                .whenReleased(()-> schedule(new SequentialCommandGroup(
+                        new overrideLiftPower(lift, 0),
+                        new InstantCommand(lift::overrideTargetPosition)
+                        ))
                 );
         assistant.getGamepadButton(assistant.dpadDown)
-                .whileHeld(()-> schedule(new overrideLiftPower(lift, -0.4)))
-                .whenReleased(()-> schedule(new overrideLiftPower(lift, 0))
+                .whileHeld(()-> schedule(new SequentialCommandGroup(
+                        new overrideLiftPower(lift, -0.4),
+                        new InstantCommand(lift::overrideTargetPosition))))
+                .whenReleased(()-> schedule(new SequentialCommandGroup(
+                                new overrideLiftPower(lift, 0),
+                                new InstantCommand(lift::overrideTargetPosition)
+                        ))
                 );
         assistant.getGamepadButton(assistant.dpadLeft)
                 .whenPressed(()-> schedule(new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.UP))
@@ -127,11 +156,11 @@ public class MainOpMode extends TeleOpBase {
                 .whenPressed(()-> schedule(new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN))
                 );
         assistant.getGamepadButton(assistant.leftBumper)
-                .whileHeld(()-> schedule(new setIntakeSpeedCommand(intake, 0.5)))
+                .whileHeld(()-> schedule(new setIntakeSpeedCommand(intake, 0.75)))
                 .whenReleased(()-> schedule(new setIntakeSpeedCommand(intake, 0))
                 );
         assistant.getGamepadButton(assistant.rightBumper)
-                .whileHeld(()-> schedule(new setIntakeSpeedCommand(intake, -0.5)))
+                .whileHeld(()-> schedule(new setIntakeSpeedCommand(intake, -0.75)))
                 .whenReleased(()-> schedule(new setIntakeSpeedCommand(intake, 0))
                 );
         assistant.getGamepadButton(assistant.M1)
@@ -166,7 +195,5 @@ public class MainOpMode extends TeleOpBase {
         }
 
         tank.loop(driver.getGamepadInput(driveMultiplier, driveMultiplier));
-
-        telemetry.addData("dsitance to ball", robot.colorSensor.getDistance(DistanceUnit.CM));
     }
 }
