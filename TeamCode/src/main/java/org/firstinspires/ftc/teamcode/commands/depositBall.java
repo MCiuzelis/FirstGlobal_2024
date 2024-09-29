@@ -31,12 +31,11 @@ public class depositBall extends SequentialCommandGroup {
 
                                         new SequentialCommandGroup(
                                                     //IF BALL OUTSIDE
-
-
                                                     new setIntakeSpeedCommand(intake, 1),
                                                     new WaitCommand(600),
-                                                    new setIntakeSpeedCommand(intake, 0)
-                                        ),
+                                                    new setIntakeSpeedCommand(intake, 0),
+                                                    new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN)
+                                                ),
                                         ()-> intake.getCurrentState().equals(IntakeSubsystem.INTAKE_ANGLE.HOLDING_BALL_INSIDE)
                                 ),
                                 new SequentialCommandGroup(
@@ -49,8 +48,9 @@ public class depositBall extends SequentialCommandGroup {
                                         new WaitCommand(800),
                                         new setIntakeSpeedCommand(intake, 0),
                                         new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
-                                        new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN)
-                                ),
+                                        new setIntakeAngleCommand(intake, IntakeSubsystem.INTAKE_ANGLE.DOWN),
+                                        new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN)
+                                        ),
                                 ()-> (intake.getCurrentState().equals(IntakeSubsystem.INTAKE_ANGLE.HOLDING_BALL_INSIDE) ||
                                         intake.getCurrentState().equals(IntakeSubsystem.INTAKE_ANGLE.HOLDING_BALL_OUTSIDE)
                         )

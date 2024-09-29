@@ -23,7 +23,7 @@ public class RobotHardware {
     public CuttleRevHub expansionHub;
     public BetterMotor frontLeft, frontRight, backLeft, backRight, liftMotor_Left, liftMotor_Right, intake_AngleMotor, intake_spinyMotor;
     public BetterEncoder encoder_liftPosition, encoder_intake_Angle, encoder_intake_Speed;
-    public BetterServo releaseServoLeft, releaseServoRight, topServoLeft, topServoRight;
+    public BetterServo releaseServoLeft, releaseServoRight, topServoLeft, topServoRight, zipTieServo;
     public RevColorSensorV3 colorSensor;
 
     public RobotHardware(HardwareMap hw){
@@ -59,6 +59,8 @@ public class RobotHardware {
 
         topServoLeft = new BetterServo(controlHub, 2, BetterServo.Direction.FORWARD);
         topServoRight = new BetterServo(controlHub, 3, BetterServo.Direction.REVERSE);
+
+        zipTieServo = new BetterServo(controlHub, 4, BetterServo.Direction.FORWARD);
 
         colorSensor = hw.get(RevColorSensorV3.class, "colorSensor");
     }

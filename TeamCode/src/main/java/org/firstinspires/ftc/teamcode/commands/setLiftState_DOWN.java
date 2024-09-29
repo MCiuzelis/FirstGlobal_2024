@@ -17,14 +17,6 @@ public class setLiftState_DOWN extends SequentialCommandGroup {
         addCommands(
                 new ConditionalCommand(
                         new SequentialCommandGroup(
-                                //if lift already up
-                                //new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.RELEASE),
-                                //new WaitCommand(1200),
-                                new rumbleCommand(driver, 100),
-                                //new WaitCommand(400),
-
-
-
                                 new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
 
                                 new ConditionalCommand(
@@ -35,17 +27,10 @@ public class setLiftState_DOWN extends SequentialCommandGroup {
                         ),
                         new SequentialCommandGroup(
                                 //lift down or in the middle of travel
-                                new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN),
+                                new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
 
-                                new ConditionalCommand(
-                                        //WAIT FOR RETRACTION IF IN TRANSFER POS
-                                        new SequentialCommandGroup(
-                                                new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
-                                                new WaitCommand(500)
-                                        ),
-                                        new emptyCommand(),
-                                        lift::areServosExtended
-                                )
+                                new WaitCommand(150),
+                                new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN)
                         ),
                         lift::liftReachedPosition
                 )

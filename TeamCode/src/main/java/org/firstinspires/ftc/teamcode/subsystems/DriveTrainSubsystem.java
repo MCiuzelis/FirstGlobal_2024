@@ -16,9 +16,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
     RobotHardware robot;
     Telemetry telemetry;
 
-    public static double turnOutputCap = 0.5;
-    LowPassFilter leftFilter = new LowPassFilter(0.75);
-    LowPassFilter rightFilter = new LowPassFilter(0.75);
+    public static double turnOutputCap = 0.6;
+    LowPassFilter leftFilter = new LowPassFilter(0.76);
+    LowPassFilter rightFilter = new LowPassFilter(0.76);
 
     public DriveTrainSubsystem(RobotHardware robot, Telemetry telemetry){
         this.robot = robot;
@@ -38,8 +38,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
         robot.setLeftPower(leftFilter.estimate(powers[0]));
         robot.setRightPower(rightFilter.estimate(powers[1]));
-        telemetry.addData("leftPower: ", leftPower);
-        telemetry.addData("rightPower: ", rightPower);
     }
 
 

@@ -36,20 +36,19 @@ public class MainOpMode extends TeleOpBase {
     @Override
     public void Init() {
         lift.update(LiftSubsystem.BUCKET_SERVO_POSITION.HOLD);
+        robot.zipTieServo.setPosition(1);
         intake.calibrateAngle();
 
         //MAIN DRIVER COMMANDS:
         driver.getGamepadButton(driver.square)
                 .toggleWhenPressed(()-> schedule(new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.RELEASE)),
                                    ()-> schedule(new setLiftState_DOWN(intake, lift, driver))
-
                 );
         driver.getGamepadButton(driver.cross)
                 .whenPressed(()-> schedule(new setLiftState_LOW_MID_HIGH(intake, lift, setLiftState_LOW_MID_HIGH.STATE.LOW)
                 ));
         driver.getGamepadButton(driver.circle)
                 .whenPressed(()-> schedule(new setLiftState_LOW_MID_HIGH(intake, lift, setLiftState_LOW_MID_HIGH.STATE.MID)
-
                 ));
         driver.getGamepadButton(driver.triangle)
                 .whenPressed(()-> schedule(new setLiftState_LOW_MID_HIGH(intake, lift, setLiftState_LOW_MID_HIGH.STATE.HIGH)
@@ -86,7 +85,7 @@ public class MainOpMode extends TeleOpBase {
                                    ()-> schedule(new setTopServoState(lift, LiftSubsystem.TOP_SERVO_POSITION.FOLDED))
                 );
         driver.getGamepadButton(driver.leftBumper)
-                        .whenPressed(()-> schedule(new kickBall(intake)
+                .whenPressed(()-> schedule(new kickBall(intake)
         ));
 
 
@@ -169,10 +168,14 @@ public class MainOpMode extends TeleOpBase {
         assistant.getGamepadButton(assistant.M2)
                 .whenPressed(()-> schedule(new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD))
                 );
+        assistant.getGamepadButton(assistant.share)
+                .whenPressed(()-> new InstantCommand(()-> lift.setBallState(LiftSubsystem.BALL_STATE.NOT_IN_TRANSFER)
+                ));
     }
 
     @Override
     public void Start() {
+        robot.zipTieServo.setPosition(0.14);
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
                 new setFrontServoState(lift, LiftSubsystem.BUCKET_SERVO_POSITION.HOLD),
                 new setLiftHeightCommand(lift, LiftSubsystem.LIFT_POSITION.DOWN),
@@ -186,6 +189,10 @@ public class MainOpMode extends TeleOpBase {
         robot.encoder_liftPosition.updatePosition();
         robot.encoder_intake_Angle.updatePosition();
         intake.setAngleOffset(driver.leftTrigger());
+
+        //telemetry.addData("left motor current: ", robot.liftMotor_Left.getCurrent());
+        //telemetry.addData("right motor current: ", robot.liftMotor_Right.getCurrent());
+
 
         CommandScheduler.getInstance().run();
 

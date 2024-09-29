@@ -27,7 +27,7 @@ public class swallowBall_Inside extends SequentialCommandGroup {
                 new setIntakeSpeedCommand(intake, 0.7),
 
                 new WaitCommand(200),
-                new WaitUntilCommand(()-> intake.overCurrentTriggered(0.7)),
+                new WaitUntilCommand(()-> intake.overCurrentTriggered(0.6)),
                 new InstantCommand(()->intake.setAngle(IntakeSubsystem.INTAKE_ANGLE.HOLDING_BALL_INSIDE)),
                 new setIntakeSpeedCommand(intake, 0)
         );

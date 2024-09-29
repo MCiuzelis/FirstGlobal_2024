@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
+
+import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.LowPassFilter;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -36,14 +38,16 @@ public class LiftSubsystem extends SubsystemBase {
 
     public BALL_STATE currentBallState = BALL_STATE.NOT_IN_TRANSFER;
 
-    public static double p = 0.8;
-    public static double i = 0.0037;
+    public static double p = 0.7;
+    public static double i = 0.00;
     public static double d = 0.0023;
-    public static double f = 0.0038;
+    public static double f = 0.0005;
 
     private double targetPosition = 0;
     private final PIDFController controller = new PIDFController(p, i, d, f);
     private double powerOverride = 0;
+
+    private LowPassFilter liftFiler = new LowPassFilter(0.6);
 
     RobotHardware robot;
     Telemetry telemetry;
@@ -61,6 +65,11 @@ public class LiftSubsystem extends SubsystemBase {
         telemetry.addData("lift target position: ", targetPosition);
         telemetry.addData("current lift position: ", currentPosition);
         power = clamp(power, -0.85, 1);
+        power = liftFiler.estimate(power);
+
+        if (currentPosition > targetPosition - errorMargin && currentPosition < targetPosition + errorMargin){
+            power = 0;
+        }
 
         if (powerOverride != 0){
             power = powerOverride;
